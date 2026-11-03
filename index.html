@@ -52,6 +52,7 @@ button,select,input{font:inherit;color:inherit}
 .btn-ghost:hover{background:var(--hover)}
 .btn{background:var(--text);color:var(--bg);border:0;border-radius:999px;padding:9px 18px;font-weight:500;cursor:pointer;font-size:14px}
 .btn.alt{background:var(--card);color:var(--text);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.sm{padding:7px 14px;font-size:13px}
 .btn:active{transform:scale(.98)}
 
 main{max-width:1180px;margin:0 auto;padding:28px 20px 80px}
@@ -77,47 +78,55 @@ h2{font-size:21px;letter-spacing:-.02em;margin:0;font-weight:600}
   border-radius:999px;padding:8px 34px 8px 15px;font-size:14px;font-weight:500;cursor:pointer;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%2386868b' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 14px center}
+.select.sm{font-size:13px;padding:7px 30px 7px 13px;background-position:right 12px center;max-width:100%}
+.select.on{box-shadow:inset 0 0 0 1.5px var(--accent);color:var(--deep)}
 .date{padding:7px 12px;background-image:none}
 .range{display:inline-flex;align-items:center;gap:6px}
 
 /* GRID / CARDS */
 .grid{display:grid;gap:16px;margin-bottom:16px}
-.g3{grid-template-columns:repeat(3,1fr)}
-.g4{grid-template-columns:repeat(4,1fr)}
-.g2{grid-template-columns:repeat(2,1fr)}
-.g21{grid-template-columns:2fr 1fr}
-.g12{grid-template-columns:1fr 2fr}
-@media (max-width:980px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g21,.g12{grid-template-columns:1fr}}
-@media (max-width:640px){.g4,.g2{grid-template-columns:1fr}}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g21{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.g12{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+.g1{grid-template-columns:minmax(0,1fr)}
+@media (max-width:1080px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:980px){.g3,.g21,.g12{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.g4,.g2{grid-template-columns:minmax(0,1fr)}}
 .card{background:var(--card);border-radius:var(--r);padding:22px;box-shadow:var(--shadow);min-width:0}
 .card.pad-lg{padding:26px}
-.big{font-size:clamp(30px,3.6vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
+/* tarjeta centrada: título arriba, contenido centrado */
+.cc{display:flex;flex-direction:column}
+.cc .body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;width:100%}
+.cc .body .kvs{width:100%;max-width:340px;margin-top:10px;text-align:left}
+.big{font-size:clamp(28px,3.2vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
 .mid{font-size:24px;font-weight:600;letter-spacing:-.02em}
-.kv{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:14px}
+.kv{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;font-size:14px}
 .kv + .kv{border-top:1px solid var(--line)}
 .kv b{font-weight:600}
-.delta{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;margin-top:8px}
+.kv .s{font-size:12px;color:var(--muted);font-weight:500;margin-left:6px}
+.delta{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;margin-top:4px}
 .delta.up{color:var(--ok);background:var(--okbg)} .delta.down{color:var(--bad);background:var(--badbg)} .delta.flat{color:var(--muted);background:var(--track)}
-.note{font-size:13px;color:var(--muted);margin-top:10px}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
 
 /* DONUT / RING */
-.viz{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.viz{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%}
 .donut{position:relative;flex:0 0 auto}
 .donut svg{display:block}
-.donut .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
-.donut .ctr b{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.donut .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;padding:0 14%}
+.donut .ctr b{font-weight:700;letter-spacing:-.02em;line-height:1.1;white-space:nowrap}
 .donut .ctr span{font-size:11px;color:var(--muted);font-weight:500}
-.legend{flex:1;min-width:150px;display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
-.legend li{display:grid;grid-template-columns:10px 1fr auto;align-items:center;gap:8px;font-size:13px}
+.legend{width:100%;max-width:340px;display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none;text-align:left}
+.legend li{display:grid;grid-template-columns:10px minmax(0,1fr) auto;align-items:center;gap:8px;font-size:13px}
+.legend li > span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .legend .dot{width:10px;height:10px;border-radius:50%}
 .legend .val{font-weight:600}
-.legend .pct{color:var(--muted);font-weight:500;margin-left:6px;font-size:12px}
+.legend .pct{color:var(--muted);font-weight:500;margin-left:6px;font-size:12px;display:inline-block;min-width:30px;text-align:right}
 .arc{animation:draw 1s cubic-bezier(.2,.8,.2,1) both}
 @keyframes draw{from{stroke-dasharray:0 2000}}
 @media (prefers-reduced-motion:reduce){.arc{animation:none}}
 
-.meta-card{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
-.meta-card .info{flex:1;min-width:160px}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
 .pill.ok{color:var(--ok);background:var(--okbg)} .pill.warn{color:var(--warn);background:var(--warnbg)} .pill.bad{color:var(--bad);background:var(--badbg)}
 .pill.neutral{color:var(--muted);background:var(--track)}
@@ -155,12 +164,13 @@ h2{font-size:21px;letter-spacing:-.02em;margin:0;font-weight:600}
 
 /* PRODUCT LIST */
 .ptools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
-.search{background:var(--track);border:0;border-radius:999px;padding:8px 14px;font-size:14px;min-width:200px;outline:none}
+.search{background:var(--track);border:0;border-radius:999px;padding:8px 14px;font-size:14px;min-width:240px;outline:none}
 .search:focus{box-shadow:0 0 0 3px var(--tint)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
 .plist{display:flex;flex-direction:column}
-.phead,.prow{display:grid;grid-template-columns:minmax(0,1fr) 70px 120px 110px 22px;gap:12px;align-items:center}
+.phead,.prow,.pfoot{display:grid;grid-template-columns:minmax(0,1fr) 70px 130px 110px 22px;gap:12px;align-items:center}
 .phead{font-size:12px;color:var(--faint);font-weight:600;padding:0 10px 8px;border-bottom:1px solid var(--line)}
-.phead span:not(:first-child),.prow .num{text-align:right}
+.phead span:not(:first-child),.prow .num,.pfoot span:not(:first-child){text-align:right}
 .pg{border-bottom:1px solid var(--line)}
 .prow{width:100%;background:none;border:0;padding:14px 10px;cursor:pointer;text-align:left;border-radius:12px}
 .prow:hover{background:var(--hover)}
@@ -170,26 +180,37 @@ h2{font-size:21px;letter-spacing:-.02em;margin:0;font-weight:600}
 .tag.d{background:var(--tint);color:var(--deep)} .tag.a{background:var(--track);color:var(--muted)}
 .chev{width:9px;height:9px;border-right:1.8px solid var(--faint);border-bottom:1.8px solid var(--faint);transform:rotate(45deg);justify-self:center;transition:transform .2s;margin-top:-4px}
 .pg.open .chev{transform:rotate(-135deg);margin-top:4px}
-.pdet{display:none;padding:2px 10px 14px}
+.pdet{display:none;padding:4px 10px 14px}
 .pg.open .pdet{display:block}
-.dr{display:grid;grid-template-columns:minmax(0,1.3fr) 92px minmax(0,1.4fr) 110px 100px;gap:12px;align-items:center;
-  font-size:13px;padding:9px 12px;background:var(--bg);border-radius:12px;margin-top:6px}
-.dr .id{font-weight:600;font-variant-numeric:tabular-nums}
-.dr .r{text-align:right}
+.dh,.dr{display:grid;grid-template-columns:minmax(0,1.4fr) 92px minmax(0,1.4fr) 110px 120px;gap:12px;align-items:center}
+.dh{font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;padding:4px 12px 2px}
+.dr{font-size:13px;padding:9px 12px;background:var(--bg);border-radius:12px;margin-top:6px}
+.dr .id{font-weight:600;font-variant-numeric:tabular-nums;word-break:break-all}
+.dh .r,.dr .r{text-align:right}
 .dr .s{font-size:12px;color:var(--muted)}
+.dr .pill{padding:2px 8px;margin-top:3px}
+.dmore{display:block;margin:10px auto 0}
+.pfoot{padding:14px 10px 0;font-weight:600}
+.more{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:16px 0 4px;font-size:13px;color:var(--muted)}
 .empty{padding:28px 10px;text-align:center;color:var(--muted);font-size:14px}
-.pfoot{display:grid;grid-template-columns:minmax(0,1fr) 70px 120px 110px 22px;gap:12px;padding:14px 10px 0;font-weight:600}
-.pfoot span:not(:first-child){text-align:right}
+.only-m{display:none}
 @media (max-width:720px){
   .phead{display:none}
   .prow{grid-template-columns:1fr auto 18px;grid-template-areas:"n t ch" "q c ch";row-gap:4px}
   .prow .pname{grid-area:n;align-items:flex-start}.prow .pname .t{white-space:normal}
   .prow .q{grid-area:q;text-align:left!important;color:var(--muted);font-size:13px}
-  .prow .tt{grid-area:t;font-weight:600}.prow .cc{grid-area:c;font-size:13px;color:var(--muted)}.prow .cc::before{content:"Com. "}.prow .chev{grid-area:ch}
-  .dr{grid-template-columns:1fr auto;row-gap:2px}
-  .dr .hide-m{display:none}
+  .prow .tt{grid-area:t;font-weight:600}.prow .cc2{grid-area:c;font-size:13px;color:var(--muted)}.prow .cc2::before{content:"Com. "}.prow .chev{grid-area:ch}
+  .dh,.dr{grid-template-columns:minmax(0,1fr) auto;row-gap:2px}
+  .dh .hide-m,.dr .hide-m{display:none}
+  .only-m{display:block}
   .pfoot{grid-template-columns:1fr auto auto;gap:10px}
   .pfoot .q{display:none}.pfoot span:last-child{display:none}
+  .search{min-width:0;width:100%}
+  .who{display:none}
+  .filters{display:grid;grid-template-columns:1fr 1fr}
+  .filters .select{width:100%}
+  .filters .btn-ghost{grid-column:1/-1}
+  .ptools > div{width:100%}
 }
 
 /* LOGIN / STATES */
@@ -205,26 +226,43 @@ h2{font-size:21px;letter-spacing:-.02em;margin:0;font-weight:600}
 .err{color:var(--bad);font-size:14px;margin-top:16px}
 .updated{font-size:12px;color:var(--faint);text-align:center;margin-top:28px}
 
-/* PRINT */
-.print-head{display:none}
+/* ===== PDF: estado de comisiones (solo al imprimir) ===== */
+#printDoc{display:none}
 @media print{
-  @page{margin:12mm}
-  body{background:#fff;color:#000;font-size:11px}
-  .nav,.period,.no-print,.banner,.search,.seg,.chev{display:none!important}
-  main{padding:0;max-width:none}
-  .print-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #03686b;padding-bottom:8px;margin-bottom:14px}
-  .print-head b{font-size:18px;color:#03686b}
-  .hero{margin:0 0 12px}
-  h1{font-size:26px}
-  .card{box-shadow:none;border:1px solid #ddd;break-inside:avoid;padding:14px}
-  .grid{gap:10px}
-  .g3{grid-template-columns:repeat(3,1fr)!important}
-  .g21,.g12{grid-template-columns:1fr 1fr!important}
-  .pdet{display:block!important}
-  .pg{break-inside:avoid}
-  .dr{background:#f5f5f7}
-  .arc,.fil{animation:none!important}
+  @page{size:letter;margin:12mm 12mm 14mm}
+  html,body{background:#fff!important}
+  body > *:not(#printDoc){display:none!important}
+  #printDoc{display:block;color:#1d1d1f;font:10px/1.45 -apple-system,BlinkMacSystemFont,Inter,"Helvetica Neue",Arial,sans-serif;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+.pd-h{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:2px solid #03686b}
+.pd-h img{height:34px}
+.pd-h .t{font-size:18px;font-weight:700;color:#03686b;text-align:right;letter-spacing:-.01em}
+.pd-h .p{font-size:11px;color:#555;text-align:right}
+.pd-info{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.pd-info div{background:#f2f8f8;border-radius:6px;padding:7px 10px}
+.pd-info span{display:block;font-size:8.5px;text-transform:uppercase;letter-spacing:.05em;color:#03686b;font-weight:700}
+.pd-info b{font-size:11.5px}
+.pd-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.pd-k{width:100%;border-collapse:collapse;border:1px solid #d7e6e7;border-radius:6px}
+.pd-k th{background:#01959f;color:#fff;text-align:left;padding:5px 8px;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em}
+.pd-k td{padding:4px 8px;border-top:1px solid #e6eeee}
+.pd-k td:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pd-k tr.tot td{font-weight:700;background:#f2f8f8}
+#printDoc h2{font-size:12.5px;color:#03686b;margin:14px 0 6px;font-weight:700}
+.pd-t{width:100%;border-collapse:collapse}
+.pd-t thead{display:table-header-group}
+.pd-t th{background:#01959f;color:#fff;text-align:left;padding:5px 6px;font-size:9px;text-transform:uppercase;letter-spacing:.03em}
+.pd-t td{padding:4px 6px;border-bottom:1px solid #e6eeee;vertical-align:top}
+.pd-t tbody tr:nth-child(even) td{background:#f8fbfb}
+.pd-t tr{break-inside:avoid}
+.pd-t .r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pd-t .m{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pd-t .sub{color:#666;font-size:8.5px}
+.pd-t tfoot{display:table-row-group}
+.pd-t tfoot td{font-weight:700;border-top:1.5px solid #03686b;border-bottom:0;background:#f2f8f8}
+.pd-note{font-size:8.5px;color:#666;margin-top:12px;border-top:1px solid #ddd;padding-top:6px}
+.pd-empty{color:#777;font-style:italic;padding:4px 0}
 </style>
 </head>
 <body>
@@ -238,6 +276,7 @@ h2{font-size:21px;letter-spacing:-.02em;margin:0;font-weight:600}
   </div>
 </header>
 <main id="app"></main>
+<div id="printDoc"></div>
 
 <script>
 /* =================== CONFIGURACIÓN =================== */
@@ -257,17 +296,22 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&l
 const sum = (a, k) => a.reduce((s, x) => s + (x[k] || 0), 0);
 const fmtDate = f => f ? f.slice(8, 10) + '/' + f.slice(5, 7) + '/' + f.slice(0, 4) : '—';
 const ymLabel = ym => MESES[+ym.slice(5, 7) - 1] + ' ' + ym.slice(0, 4);
+const cap1 = s => s.replace(/^./, c => c.toUpperCase());
 const pad = n => String(n).padStart(2, '0');
 const todayStr = () => { const d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
 const prevYm = ym => { let y = +ym.slice(0, 4), m = +ym.slice(5, 7) - 1; if (m < 1) { m = 12; y--; } return y + '-' + pad(m); };
 const daysIn = ym => new Date(+ym.slice(0, 4), +ym.slice(5, 7), 0).getDate();
 const seq = id => +(String(id).replace(/\D/g, '')) || 0;
+// Normaliza para buscar: sin tildes, sin espacios ni signos ("ISV-3,786" -> "isv3786")
+const norm = s => String(s ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+const pct = (a, b) => b ? (a / b * 100).toFixed(1) + '%' : '—';
 
+const FILTROS0 = { pos: '', pago: '', est: '', pc: '', sort: 'tot' };
 const S = {
   data: null, token: null,
   view: 'store', vid: null,           // admin: 'store' | 'vendor'
   period: { mode: 'month', ym: todayStr().slice(0, 7), from: null, to: null },
-  tab: 'all', q: '', open: new Set(), daySel: null
+  tab: 'all', q: '', f: { ...FILTROS0 }, limit: 10, dlim: {}, open: new Set()
 };
 
 /* ---------------- Marca ---------------- */
@@ -352,7 +396,6 @@ function iniciar(res) {
   });
   D.devices.forEach(d => d.pos = (d.pos || '').trim());
 
-  // meses disponibles
   const ms = new Set([todayStr().slice(0, 7)]);
   D.devices.forEach(d => d.f && ms.add(d.f.slice(0, 7)));
   D.orders.forEach(o => o.f && ms.add(o.f.slice(0, 7)));
@@ -374,13 +417,13 @@ function enPeriodo(p) {
 function corte(vid, pred) {
   const D = S.data, ok = x => (!vid || x.v === vid) && pred(x.f);
   const d = D.devices.filter(ok), o = D.orders.filter(ok), it = D.items.filter(ok);
-  const devSold = sum(d, 'p'), accSold = sum(o, 't');
+  const devSold = sum(d, 'p'), accSold = sum(o, 't'), ganD = sum(d, 'g'), ganA = sum(o, 'g');
+  const devCom = sum(d, 'c'), accCom = sum(o, 'cc');
   return {
     d, o, it, devSold, accSold, total: devSold + accSold,
     devN: d.length, accN: o.length, accU: sum(it, 'q'),
-    devCom: sum(d, 'c'), accCom: sum(o, 'cc'),
-    get com() { return this.devCom + this.accCom; },
-    gan: sum(d, 'g') + sum(o, 'g'),
+    devCom, accCom, com: devCom + accCom,
+    ganD, ganA, gan: ganD + ganA,
     paid: sum(o.filter(x => x.pc === 'DONE'), 'cc'),
     pend: sum(o.filter(x => x.pc !== 'DONE'), 'cc')
   };
@@ -400,6 +443,10 @@ function proyeccion(valor) {
 }
 
 /* ---------------- Gráficas SVG ---------------- */
+function ctrSize(txt, size) {
+  const base = size >= 140 ? 24 : size >= 100 ? 20 : 13, len = String(txt).length;
+  return Math.max(size >= 100 ? 15 : 11, base - Math.max(0, len - 6) * 1.7);
+}
 function donut(segs, o = {}) {
   const size = o.size || 164, st = o.stroke || 18, r = (size - st) / 2, C = 2 * Math.PI * r;
   const tot = segs.reduce((s, x) => s + Math.max(0, x.v), 0);
@@ -412,14 +459,15 @@ function donut(segs, o = {}) {
       stroke-dasharray="${dash} ${C - dash}" stroke-dashoffset="${-off}" transform="rotate(-90 ${size/2} ${size/2})"><title>${esc(x.l)}: ${money(x.v)}</title></circle>`;
     off += len;
   });
+  const center = o.center ?? '';
   return `<div class="donut" style="width:${size}px;height:${size}px">
     <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${esc(o.aria || '')}">
       <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" style="stroke:var(--track)" stroke-width="${st}"/>${arcs}</svg>
-    <div class="ctr"><b class="num">${o.center ?? ''}</b><span>${o.sub ?? ''}</span></div></div>`;
+    <div class="ctr"><b class="num" style="font-size:${ctrSize(center, size)}px">${center}</b><span>${o.sub ?? ''}</span></div></div>`;
 }
 function legend(segs, fmt = money) {
   const tot = segs.reduce((s, x) => s + Math.max(0, x.v), 0) || 1;
-  return `<ul class="legend">${segs.map(x => `<li><span class="dot" style="background:${x.c}"></span><span>${esc(x.l)}</span>
+  return `<ul class="legend">${segs.map(x => `<li><span class="dot" style="background:${x.c}"></span><span title="${esc(x.l)}">${esc(x.l)}</span>
     <span class="num"><span class="val">${fmt(x.v)}</span><span class="pct">${(x.v / tot * 100).toFixed(0)}%</span></span></li>`).join('')}</ul>`;
 }
 function ring(pct, o = {}) {
@@ -432,7 +480,7 @@ function ring(pct, o = {}) {
       ${p > 0 ? `<circle class="arc" cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="url(#${id})" stroke-width="${st}" stroke-linecap="round"
         stroke-dasharray="${dash} ${C}" transform="rotate(-90 ${size/2} ${size/2})"/>` : ''}
     </svg>
-    ${o.inner === false ? '' : `<div class="ctr"><b class="num" style="font-size:${size > 100 ? 24 : 13}px">${Math.round(pct * 100)}%</b>${size > 100 ? `<span>${o.sub || ''}</span>` : ''}</div>`}</div>`;
+    <div class="ctr"><b class="num" style="font-size:${size > 100 ? 26 : 13}px">${Math.round(pct * 100)}%</b>${size > 100 ? `<span>${o.sub || ''}</span>` : ''}</div></div>`;
 }
 const PAL = ['var(--p1)', 'var(--p2)', 'var(--p3)', 'var(--p4)', 'var(--p5)', 'var(--p6)', 'var(--p7)'];
 
@@ -440,7 +488,7 @@ function barsData(c) {
   const p = S.period; let keys = [];
   if (p.mode === 'month') { for (let i = 1; i <= daysIn(p.ym); i++) keys.push(p.ym + '-' + pad(i)); }
   else { const a = new Date(p.from + 'T12:00'), b = new Date(p.to + 'T12:00'); for (let d = a; d <= b && keys.length < 400; d.setDate(d.getDate() + 1)) keys.push(d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())); }
-  let byMonth = keys.length > 62;
+  const byMonth = keys.length > 62;
   if (byMonth) keys = [...new Set(keys.map(k => k.slice(0, 7)))];
   const m = {}; keys.forEach(k => m[k] = { k, d: 0, a: 0 });
   const kOf = f => byMonth ? f.slice(0, 7) : f;
@@ -450,7 +498,8 @@ function barsData(c) {
 }
 function bars(c) {
   const { rows, byMonth } = barsData(c);
-  const sm = window.innerWidth < 600, W = sm ? 360 : 640, H = sm ? 170 : 190, padL = sm ? 44 : 40, padB = 22, n = rows.length || 1, step = (W - padL) / n, bw = Math.max(3, Math.min(16, step * 0.62));
+  const sm = window.innerWidth < 600, W = sm ? 360 : 640, H = sm ? 170 : 190, padL = sm ? 44 : 40, padB = 22;
+  const n = rows.length || 1, step = (W - padL) / n, bw = Math.max(3, Math.min(16, step * 0.62));
   const max = Math.max(1, ...rows.map(r => r.d + r.a));
   const nice = (() => { const e = Math.pow(10, Math.floor(Math.log10(max))); return Math.ceil(max / e) * e; })();
   const y = v => (H - padB) * (1 - v / nice);
@@ -488,7 +537,7 @@ function periodHTML() {
   return `<div class="period">
     <div class="seg"><button data-mode="month" class="${p.mode === 'month' ? 'on' : ''}">Mes</button><button data-mode="range" class="${p.mode === 'range' ? 'on' : ''}">Rango</button></div>
     ${p.mode === 'month'
-      ? `<select class="select" id="selMonth" aria-label="Mes">${D.months.map(m => `<option value="${m}" ${m === p.ym ? 'selected' : ''}>${ymLabel(m).replace(/^./, c => c.toUpperCase())}</option>`).join('')}</select>`
+      ? `<select class="select" id="selMonth" aria-label="Mes">${D.months.map(m => `<option value="${m}" ${m === p.ym ? 'selected' : ''}>${cap1(ymLabel(m))}</option>`).join('')}</select>`
       : `<span class="range"><input type="date" class="date" id="dFrom" value="${p.from}"><span class="muted">a</span><input type="date" class="date" id="dTo" value="${p.to}"></span>`}
   </div>`;
 }
@@ -499,62 +548,111 @@ function periodoTexto() {
 function semaforo(pct) {
   return pct >= 1 ? ['ok', 'Meta cumplida'] : pct >= 0.7 ? ['warn', 'Cerca de la meta'] : ['bad', 'Bajo la meta'];
 }
+function kvs(rows) {
+  return `<div class="kvs">${rows.map(([l, v, s]) => `<div class="kv"><span class="muted">${l}</span><span><b class="num">${v}</b>${s ? `<span class="s num">${s}</span>` : ''}</span></div>`).join('')}</div>`;
+}
 
 function metaCard(vid) {
   const D = S.data, p = S.period;
-  if (p.mode !== 'month') return `<div class="card"><h3>Meta de accesorios</h3><div class="mid">${money(D.meta, 0)} al mes</div>
-    <p class="note">La meta se calcula por mes calendario. Elige “Mes” para ver tu avance.</p></div>`;
+  if (p.mode !== 'month') return `<div class="card cc"><h3>Meta de accesorios</h3><div class="body"><div class="mid">${money(D.meta, 0)} al mes</div>
+    <p class="note">La meta se calcula por mes calendario. Elige “Mes” para ver tu avance.</p></div></div>`;
   const acc = corte(vid, f => f && f.startsWith(p.ym)).accSold;
-  const pct = acc / D.meta, falta = Math.max(0, D.meta - acc);
-  const [cls, txt] = semaforo(pct);
-  return `<div class="card"><h3>Meta de accesorios · ${ymLabel(p.ym)}</h3>
-    <div class="meta-card">${ring(pct, { size: 150, stroke: 16, sub: 'de la meta' })}
-      <div class="info">
-        ${falta > 0
-          ? `<div class="muted" style="font-size:13px">Te faltan</div><div class="big num">${money(falta)}</div><div class="muted" style="font-size:13px">para comenzar a comisionar accesorios</div>`
-          : `<div class="muted" style="font-size:13px">Comisionable este mes</div><div class="big num">${money(acc - D.meta)}</div><div class="muted" style="font-size:13px">vendido arriba de ${money(D.meta, 0)}</div>`}
-        <div style="margin-top:12px"><span class="pill ${cls}"><span class="sd"></span>${txt}</span></div>
-        <div class="note num">${money(acc)} de ${money(D.meta, 0)} vendidos</div>
-      </div></div></div>`;
+  const pc = acc / D.meta, falta = Math.max(0, D.meta - acc);
+  const [cls, txt] = semaforo(pc);
+  return `<div class="card cc"><h3>Meta de accesorios · ${ymLabel(p.ym)}</h3><div class="body">
+    ${ring(pc, { size: 150, stroke: 16, sub: 'de la meta' })}
+    <div style="margin-top:10px">
+      ${falta > 0
+        ? `<div class="muted" style="font-size:13px">Te faltan</div><div class="big num">${money(falta)}</div><div class="muted" style="font-size:13px">para comenzar a comisionar accesorios</div>`
+        : `<div class="muted" style="font-size:13px">Comisionable este mes</div><div class="big num">${money(acc - D.meta)}</div><div class="muted" style="font-size:13px">vendido arriba de ${money(D.meta, 0)}</div>`}
+    </div>
+    <span class="pill ${cls}" style="margin-top:8px"><span class="sd"></span>${txt}</span>
+    <div class="note num">${money(acc)} de ${money(D.meta, 0)} vendidos</div>
+  </div></div>`;
 }
 
+/* ----- Tabla "Lo que vendiste": filtros, búsqueda y paginación ----- */
+function filasFiltradas(c) {
+  const f = S.f;
+  let d = S.tab === 'acc' || f.pc ? [] : c.d;       // el filtro de comisión pagada solo aplica a accesorios
+  let a = S.tab === 'dev' || f.est ? [] : c.it;     // el filtro de estado solo aplica a dispositivos
+  const ok = x => (!f.pos || x.pos === f.pos) && (!f.pago || x.pago === f.pago);
+  d = d.filter(x => ok(x) && (!f.est || x.est === f.est));
+  a = a.filter(x => ok(x) && (!f.pc || (f.pc === 'DONE' ? x.pc === 'DONE' : x.pc !== 'DONE')));
+  return { d, a };
+}
 function productos(c) {
-  const g = new Map(), q = S.q.trim().toLowerCase();
-  if (S.tab !== 'acc') c.d.forEach(x => { const k = 'D|' + x.m; const e = g.get(k) || { k, t: 'd', n: x.m, qty: 0, tot: 0, com: 0, rows: [] }; e.qty++; e.tot += x.p; e.com += x.c; e.rows.push(x); g.set(k, e); });
-  if (S.tab !== 'dev') c.it.forEach(x => { const k = 'A|' + x.n; const e = g.get(k) || { k, t: 'a', n: x.n, qty: 0, tot: 0, com: 0, rows: [] }; e.qty += x.q; e.tot += x.t; e.com += x.cc; e.rows.push(x); g.set(k, e); });
-  let list = [...g.values()];
-  if (q) list = list.filter(e => e.n.toLowerCase().includes(q) || e.rows.some(r => (r.id + ' ' + (r.o || '')).toLowerCase().includes(q)));
-  list.sort((a, b) => b.tot - a.tot);
-  list.forEach(e => e.rows.sort((a, b) => (b.p ?? b.t) - (a.p ?? a.t)));
+  const { d, a } = filasFiltradas(c), q = norm(S.q), g = new Map();
+  const add = (t, n, x, qty, tot, com, porId) => {
+    const k = t.toUpperCase() + '|' + n;
+    const e = g.get(k) || { k, t, n, qty: 0, tot: 0, com: 0, rows: [], porId: false };
+    e.qty += qty; e.tot += tot; e.com += com; e.rows.push(x); e.porId = e.porId || porId; g.set(k, e);
+  };
+  const porId = x => !!q && [x.imei, x.id, x.o].some(v => v && norm(v).includes(q));
+  d.forEach(x => { const nm = !q || norm(x.m).includes(q), pi = !nm && porId(x); if (nm || pi) add('d', x.m, x, 1, x.p, x.c, pi); });
+  a.forEach(x => { const nm = !q || norm(x.n).includes(q), pi = !nm && porId(x); if (nm || pi) add('a', x.n, x, x.q, x.t, x.cc, pi); });
+  const list = [...g.values()];
+  const by = { tot: (x, y) => y.tot - x.tot, qty: (x, y) => y.qty - x.qty || y.tot - x.tot, com: (x, y) => y.com - x.com || y.tot - x.tot, name: (x, y) => x.n.localeCompare(y.n, 'es') };
+  list.sort(by[S.f.sort] || by.tot);
+  list.forEach(e => e.rows.sort((x, y) => (y.p ?? y.t) - (x.p ?? x.t)));
   return list;
+}
+function filtrosHTML(c) {
+  const vals = (arr, k, cur) => { const s = new Set(arr.map(x => x[k]).filter(Boolean)); if (cur) s.add(cur); return [...s].sort((x, y) => x.localeCompare(y, 'es')); };
+  const all = [...c.d, ...c.it];
+  const sel = (id, todos, pref, cur, opts) => `<select class="select sm ${cur ? 'on' : ''}" id="${id}" aria-label="${todos}">
+      <option value="">${todos}</option>${opts.map(([v, l]) => `<option value="${esc(v)}" ${v === cur ? 'selected' : ''}>${pref}${esc(l)}</option>`).join('')}</select>`;
+  const f = S.f, activo = f.pos || f.pago || f.est || f.pc || S.q;
+  return `<div class="filters no-print">
+    ${sel('fPos', 'Canal: todos', 'Canal: ', f.pos, vals(all, 'pos', f.pos).map(v => [v, v]))}
+    ${sel('fPago', 'Pago: todos', 'Pago: ', f.pago, vals(all, 'pago', f.pago).map(v => [v, v]))}
+    ${S.tab !== 'acc' ? sel('fEst', 'Estado: todos', 'Estado: ', f.est, vals(c.d, 'est', f.est).map(v => [v, v])) : ''}
+    ${S.tab !== 'dev' ? sel('fPc', 'Comisión: todas', 'Comisión ', f.pc, [['DONE', 'pagada'], ['PEND', 'pendiente']]) : ''}
+    <select class="select sm" id="fSort" aria-label="Ordenar">${[['tot', 'Mayor venta'], ['qty', 'Mayor cantidad'], ['com', 'Mayor comisión'], ['name', 'Nombre A–Z']]
+      .map(([v, l]) => `<option value="${v}" ${f.sort === v ? 'selected' : ''}>Orden: ${l}</option>`).join('')}</select>
+    ${activo ? '<button class="btn-ghost" id="fClear">Limpiar filtros</button>' : ''}
+  </div>`;
+}
+function cabeceraDet(t) {
+  return t === 'd'
+    ? `<div class="dh"><span>IMEI</span><span>Fecha</span><span class="hide-m">Canal · Pago</span><span class="r">Precio</span><span class="r">Comisión</span></div>`
+    : `<div class="dh"><span>Pedido</span><span>Fecha</span><span class="hide-m">Cant. · Canal · Pago</span><span class="r">Total</span><span class="r">Comisión</span></div>`;
 }
 function detalleDev(x) {
   const det = [x.cap, x.col, x.est].filter(v => v && v !== '-').join(' · ');
-  return `<div class="dr"><div><div class="id">${esc(x.id)}</div><div class="s">${esc(det)}</div></div>
+  return `<div class="dr"><div><div class="id">${esc(x.imei || x.id)}</div><div class="s">${esc(det)}</div></div>
     <div class="num">${fmtDate(x.f)}</div><div class="s hide-m">${esc([x.pos, x.pago].filter(Boolean).join(' · '))}</div>
-    <div class="r num"><b>${money(x.p)}</b></div><div class="r s num">Com. ${money(x.c)}</div></div>`;
+    <div class="r num"><b>${money(x.p)}</b></div><div class="r s num">${money(x.c)}</div></div>`;
 }
 function detalleAcc(x) {
-  const pag = x.cc > 0 ? (x.pc === 'DONE' ? '<span class="pill ok" style="padding:2px 8px">Pagada</span>' : '<span class="pill warn" style="padding:2px 8px">Pendiente</span>') : '';
-  return `<div class="dr"><div><div class="id">${esc(x.o)}</div><div class="s">Venta ${esc(x.id)}</div></div>
+  const pag = x.cc > 0 ? (x.pc === 'DONE' ? '<div><span class="pill ok">Pagada</span></div>' : '<div><span class="pill warn">Pendiente</span></div>') : '';
+  return `<div class="dr"><div><div class="id">${esc(x.o)}</div><div class="s only-m">${x.q} u</div></div>
     <div class="num">${fmtDate(x.f)}</div><div class="s hide-m">${x.q} u · ${esc([x.pos, x.pago].filter(Boolean).join(' · '))}</div>
-    <div class="r num"><b>${money(x.t)}</b></div><div class="r s num">Com. ${money(x.cc)} ${pag}</div></div>`;
+    <div class="r num"><b>${money(x.t)}</b></div><div class="r s num">${money(x.cc)}${pag}</div></div>`;
 }
 function productosHTML(c) {
-  const list = productos(c);
-  const rows = list.map(e => `<div class="pg ${S.open.has(e.k) ? 'open' : ''}" data-k="${esc(e.k)}">
-      <button class="prow" aria-expanded="${S.open.has(e.k)}"><span class="pname"><span class="tag ${e.t}">${e.t === 'd' ? 'Disp.' : 'Acc.'}</span><span class="t">${esc(e.n)}</span></span>
-      <span class="num q">${e.qty} u</span><span class="num tt">${money(e.tot)}</span><span class="num cc">${money(e.com)}</span><span class="chev"></span></button>
-      <div class="pdet">${e.rows.map(e.t === 'd' ? detalleDev : detalleAcc).join('')}</div></div>`).join('');
+  const list = productos(c), shown = list.slice(0, S.limit);
+  const rows = shown.map(e => {
+    const open = S.open.has(e.k) || e.porId, lim = S.dlim[e.k] || 10, rs = e.rows.slice(0, lim);
+    return `<div class="pg ${open ? 'open' : ''}" data-k="${esc(e.k)}">
+      <button class="prow" aria-expanded="${open}"><span class="pname"><span class="tag ${e.t}">${e.t === 'd' ? 'Disp.' : 'Acc.'}</span><span class="t">${esc(e.n)}</span></span>
+      <span class="num q">${e.qty} u</span><span class="num tt">${money(e.tot)}</span><span class="num cc2">${money(e.com)}</span><span class="chev"></span></button>
+      <div class="pdet">${cabeceraDet(e.t)}${rs.map(e.t === 'd' ? detalleDev : detalleAcc).join('')}
+        ${e.rows.length > lim ? `<button class="btn alt sm dmore" data-dmore="${esc(e.k)}">Ver más (${e.rows.length - lim} restantes)</button>` : ''}</div></div>`;
+  }).join('');
+  const T = list.reduce((s, e) => ({ q: s.q + e.qty, t: s.t + e.tot, c: s.c + e.com }), { q: 0, t: 0, c: 0 });
   return `<div class="card pad-lg">
     <div class="ptools"><h2>Lo que vendiste</h2>
       <div style="display:flex;gap:10px;flex-wrap:wrap" class="no-print">
         <div class="seg" id="tabSeg"><button data-t="all" class="${S.tab === 'all' ? 'on' : ''}">Todo</button><button data-t="dev" class="${S.tab === 'dev' ? 'on' : ''}">Dispositivos</button><button data-t="acc" class="${S.tab === 'acc' ? 'on' : ''}">Accesorios</button></div>
-        <input class="search" id="q" placeholder="Buscar producto o ID" value="${esc(S.q)}">
+        <input class="search" id="q" placeholder="Buscar producto, IMEI o N° de pedido" value="${esc(S.q)}" autocomplete="off">
       </div></div>
+    ${filtrosHTML(c)}
     <div class="plist"><div class="phead"><span>Producto</span><span>Cant.</span><span>Vendido</span><span>Comisión</span><span></span></div>
-      ${rows || '<div class="empty">No hay ventas en este periodo.</div>'}
-      ${list.length ? `<div class="pfoot num"><span>Total</span><span class="q">${list.reduce((s, e) => s + e.qty, 0)}</span><span>${money(list.reduce((s, e) => s + e.tot, 0))}</span><span>${money(list.reduce((s, e) => s + e.com, 0))}</span><span></span></div>` : ''}
+      ${rows || '<div class="empty">No hay ventas que coincidan con la búsqueda o los filtros.</div>'}
+      ${list.length ? `<div class="pfoot num"><span>Total · ${list.length} producto${list.length === 1 ? '' : 's'}</span><span class="q">${T.q} u</span><span>${money(T.t)}</span><span>${money(T.c)}</span><span></span></div>` : ''}
+      ${list.length > S.limit ? `<div class="more"><span>Mostrando ${shown.length} de ${list.length}</span>
+        <button class="btn alt sm" data-more="10">Ver 10 más</button><button class="btn-ghost" data-more="all">Ver todos</button></div>` : ''}
     </div></div>`;
 }
 
@@ -565,42 +663,41 @@ function vistaVendedor(vid) {
   const pl = S.period.mode === 'month' ? prevLabel() : '';
   const nombre = (v.name || '').split(' ')[0];
   const mix = [{ l: 'Dispositivos', v: c.devSold, c: 'var(--deep)' }, { l: 'Accesorios', v: c.accSold, c: 'var(--soft)' }];
-  const comMix = [{ l: 'Dispositivos', v: c.devCom, c: 'var(--deep)' }, { l: 'Accesorios', v: c.accCom, c: 'var(--soft)' }];
   const pago = [{ l: 'Pagada', v: c.paid, c: 'var(--deep)' }, { l: 'Pendiente', v: c.pend, c: 'var(--p6)' }];
 
   return `
-  ${D.admin ? `<div class="banner no-print">Estás viendo el dashboard de ${esc(v.name)}<span class="nav-sp"></span><button class="btn-ghost" id="backStore">← Volver a la tienda</button></div>` : ''}
-  <div class="print-head"><b>Estado de comisiones · Phone SV</b><span>${esc(v.name)} · ${periodoTexto()}</span></div>
+  ${D.admin ? `<div class="banner">Estás viendo el dashboard de ${esc(v.name)}<span class="nav-sp"></span><button class="btn-ghost" id="backStore">← Volver a la tienda</button></div>` : ''}
   <section class="hero">
-    <div><p class="eyebrow">${periodoTexto().replace(/^./, s => s.toUpperCase())}</p>
+    <div><p class="eyebrow">${cap1(periodoTexto())}</p>
       <h1>Hola, ${esc(nombre)}.<span class="sub">Así van tus ventas.</span></h1></div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${periodHTML()}<button class="btn alt no-print" id="btnPdf">Compartir PDF</button></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${periodHTML()}<button class="btn alt" id="btnPdf">Compartir PDF</button></div>
   </section>
 
   <div class="grid g3">
-    <div class="card"><h3>Vendido</h3><div class="viz">${donut(mix, { size: 128, stroke: 15, center: money0(c.total), sub: 'total' })}
-      <div style="flex:1;min-width:150px">${legend(mix)}</div></div>
+    <div class="card cc"><h3>Vendido</h3><div class="body">
+      <div class="viz">${donut(mix, { size: 150, stroke: 16, center: money0(c.total), sub: 'total' })}${legend(mix)}</div>
       ${prev ? deltaHTML(c.total, prev.total, pl) : ''}
-      <div class="note">${c.devN} dispositivo${c.devN === 1 ? '' : 's'} · ${c.accU} accesorio${c.accU === 1 ? '' : 's'} en ${c.accN} pedido${c.accN === 1 ? '' : 's'}</div></div>
+      <div class="note">${c.devN} dispositivo${c.devN === 1 ? '' : 's'} · ${c.accU} accesorio${c.accU === 1 ? '' : 's'} en ${c.accN} pedido${c.accN === 1 ? '' : 's'}</div>
+    </div></div>
 
-    <div class="card"><h3>Comisión total</h3><div class="big num">${money(c.com)}</div>
+    <div class="card cc"><h3>Comisión total</h3><div class="body">
+      <div class="big num">${money(c.com)}</div>
       ${prev ? deltaHTML(c.com, prev.com, pl) : ''}
-      <div style="margin-top:14px"><div class="kv"><span class="muted">Dispositivos</span><b class="num">${money(c.devCom)}</b></div>
-      <div class="kv"><span class="muted">Accesorios</span><b class="num">${money(c.accCom)}</b></div></div></div>
+      ${kvs([['Dispositivos', money(c.devCom)], ['Accesorios', money(c.accCom)]])}
+    </div></div>
 
     ${metaCard(vid)}
   </div>
 
   <div class="grid g12">
-    <div class="card"><h3>Comisión de accesorios</h3><div class="viz">${donut(pago, { size: 128, stroke: 15, center: money0(c.accCom), sub: 'accesorios' })}
-      <div style="flex:1;min-width:150px">${legend(pago)}</div></div>
-      <div class="note">Según la columna Pago_Comision de cada pedido.</div></div>
+    <div class="card cc"><h3>Comisión de accesorios</h3><div class="body">
+      <div class="viz">${donut(pago, { size: 140, stroke: 15, center: money0(c.accCom), sub: 'accesorios' })}${legend(pago)}</div>
+      <div class="note">Según la columna Pago Comision de cada pedido.</div>
+    </div></div>
     <div class="card"><h3>Ventas por ${S.period.mode === 'range' && barsData(c).byMonth ? 'mes' : 'día'}</h3>${bars(c)}</div>
   </div>
 
-  <div class="grid g12" style="grid-template-columns:1fr">
-    ${productosHTML(c)}
-  </div>
+  <div class="grid g1">${productosHTML(c)}</div>
   <div class="updated">Datos al ${new Date(D.generado).toLocaleString('es-SV', { dateStyle: 'medium', timeStyle: 'short' })}</div>`;
 }
 
@@ -609,7 +706,8 @@ function vistaTienda() {
   const D = S.data, pred = enPeriodo(S.period), c = corte(null, pred);
   const prev = S.period.mode === 'month' ? corte(null, f => f && f.startsWith(prevYm(S.period.ym))) : null;
   const pl = S.period.mode === 'month' ? prevLabel() : '';
-  const ventasN = c.devN + c.accN, ticket = ventasN ? c.total / ventasN : 0, margen = c.total ? c.gan / c.total : 0;
+  const ventasN = c.devN + c.accN, ticket = ventasN ? c.total / ventasN : 0;
+  const tD = c.devN ? c.devSold / c.devN : 0, tA = c.accN ? c.accSold / c.accN : 0;
   const pticket = prev && (prev.devN + prev.accN) ? prev.total / (prev.devN + prev.accN) : 0;
   const proy = proyeccion(c.total);
 
@@ -620,16 +718,13 @@ function vistaTienda() {
     return arr.map((x, i) => Object.assign(x, { c: PAL[i] })); };
   const canales = agrupar('pos'), pagos = agrupar('pago');
 
-  // ranking (solo cargo Vendedor)
   const vendedores = D.vendors.filter(v => !v.admin);
   const pm = S.period.mode === 'month';
   const rank = vendedores.map(v => {
     const k = corte(v.id, pred);
-    const accMes = pm ? k.accSold : null;
-    return { v, k, pct: pm ? accMes / D.meta : null, proy: proyeccion(k.total) };
+    return { v, k, pct: pm ? k.accSold / D.meta : null, proy: proyeccion(k.total) };
   }).sort((a, b) => b.k.total - a.k.total);
 
-  // top productos
   const tp = new Map(), tg = new Map();
   c.d.forEach(x => { tp.set(x.m, (tp.get(x.m) || 0) + x.p); tg.set(x.m, (tg.get(x.m) || 0) + (x.g || 0)); });
   c.it.forEach(x => { tp.set(x.n, (tp.get(x.n) || 0) + x.t); tg.set(x.n, (tg.get(x.n) || 0) + (x.g || 0)); });
@@ -637,41 +732,51 @@ function vistaTienda() {
 
   return `
   <section class="hero">
-    <div><p class="eyebrow">${periodoTexto().replace(/^./, s => s.toUpperCase())}</p>
+    <div><p class="eyebrow">${cap1(periodoTexto())}</p>
       <h1>Tienda.<span class="sub">El desempeño de todos, en un vistazo.</span></h1></div>
     ${periodHTML()}
   </section>
 
   <div class="grid g4">
-    <div class="card"><h3>Vendido</h3><div class="big num">${money0(c.total)}</div>${prev ? deltaHTML(c.total, prev.total, pl) : ''}
-      ${proy ? `<div class="note num">Proyección del mes: <b>${money0(proy)}</b></div>` : ''}</div>
-    <div class="card"><h3>Ganancia</h3><div class="big num">${money0(c.gan)}</div>${prev ? deltaHTML(c.gan, prev.gan, pl) : ''}
-      <div class="note num">Margen ${(margen * 100).toFixed(1)}%</div></div>
-    <div class="card"><h3>Ticket promedio</h3><div class="big num">${money0(ticket)}</div>${prev ? deltaHTML(ticket, pticket, pl) : ''}
-      <div class="note num">${ventasN} ventas · ${c.devN} disp. · ${c.accN} pedidos</div></div>
-    <div class="card"><h3>Comisiones</h3><div class="big num">${money0(c.com)}</div>
-      <div class="note num">Disp. ${money(c.devCom)} · Acc. ${money(c.accCom)}</div>
-      <div class="note num">Accesorios por pagar: <b>${money(c.pend)}</b></div></div>
+    <div class="card cc"><h3>Vendido</h3><div class="body">
+      <div class="big num">${money0(c.total)}</div>${prev ? deltaHTML(c.total, prev.total, pl) : ''}
+      ${kvs([['Dispositivos', money0(c.devSold), c.devN + ' u'], ['Accesorios', money0(c.accSold), c.accN + ' ped.']])}
+      ${proy ? `<div class="note num">Proyección del mes: <b>${money0(proy)}</b></div>` : ''}
+    </div></div>
+    <div class="card cc"><h3>Ganancia</h3><div class="body">
+      <div class="big num">${money0(c.gan)}</div>${prev ? deltaHTML(c.gan, prev.gan, pl) : ''}
+      ${kvs([['Dispositivos', money0(c.ganD), pct(c.ganD, c.devSold)], ['Accesorios', money0(c.ganA), pct(c.ganA, c.accSold)]])}
+      <div class="note num">Margen total ${pct(c.gan, c.total)}</div>
+    </div></div>
+    <div class="card cc"><h3>Ticket promedio</h3><div class="body">
+      <div class="big num">${money0(ticket)}</div>${prev ? deltaHTML(ticket, pticket, pl) : ''}
+      ${kvs([['Dispositivos', money0(tD), c.devN + ' ventas'], ['Accesorios', money0(tA), c.accN + ' pedidos']])}
+    </div></div>
+    <div class="card cc"><h3>Comisiones</h3><div class="body">
+      <div class="big num">${money0(c.com)}</div>${prev ? deltaHTML(c.com, prev.com, pl) : ''}
+      ${kvs([['Dispositivos', money(c.devCom)], ['Accesorios', money(c.accCom)]])}
+      <div class="note num">Accesorios por pagar: <b>${money(c.pend)}</b></div>
+    </div></div>
   </div>
 
   <div class="grid g3">
-    <div class="card"><h3>Mezcla de ventas</h3><div class="viz">${donut(mix, { size: 128, stroke: 15, center: c.total ? Math.round(c.devSold / c.total * 100) + '%' : '—', sub: 'dispositivos' })}${legend(mix, money0)}</div></div>
-    <div class="card"><h3>Canales</h3><div class="viz">${donut(canales, { size: 128, stroke: 15, center: canales.length, sub: 'canales' })}${legend(canales, money0)}</div></div>
-    <div class="card"><h3>Métodos de pago</h3><div class="viz">${donut(pagos, { size: 128, stroke: 15, center: pagos.length, sub: 'métodos' })}${legend(pagos, money0)}</div></div>
+    <div class="card cc"><h3>Mezcla de ventas</h3><div class="body"><div class="viz">${donut(mix, { size: 140, stroke: 15, center: c.total ? Math.round(c.devSold / c.total * 100) + '%' : '—', sub: 'dispositivos' })}${legend(mix, money0)}</div></div></div>
+    <div class="card cc"><h3>Canales</h3><div class="body"><div class="viz">${donut(canales, { size: 140, stroke: 15, center: canales.length, sub: 'canales' })}${legend(canales, money0)}</div></div></div>
+    <div class="card cc"><h3>Métodos de pago</h3><div class="body"><div class="viz">${donut(pagos, { size: 140, stroke: 15, center: pagos.length, sub: 'métodos' })}${legend(pagos, money0)}</div></div></div>
   </div>
 
-  <div class="grid" style="grid-template-columns:1fr">
+  <div class="grid g1">
     <div class="card pad-lg"><div class="ptools"><h2>Vendedores</h2><span class="muted" style="font-size:13px">Anillo = avance de la meta de accesorios (${money(D.meta, 0)})</span></div>
       <div class="rank">${rank.map((r, i) => {
         const [cls, txt] = r.pct == null ? ['neutral', 'Meta mensual'] : semaforo(r.pct);
         return `<div class="rk"><div class="pos">${i + 1}</div>
-          <div>${r.pct == null ? ring(0, { size: 50, stroke: 6 }) : ring(r.pct, { size: 50, stroke: 6 })}</div>
+          <div>${ring(r.pct || 0, { size: 50, stroke: 6 })}</div>
           <div style="min-width:0"><div class="nm">${esc(r.v.name)}</div>
             <div class="sm num">Disp. ${money0(r.k.devSold)} (${r.k.devN}) · Acc. ${money0(r.k.accSold)}</div>
             <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><span class="pill ${cls}"><span class="sd"></span>${txt}</span>
             ${r.pct != null && r.pct < 1 ? `<span class="pill neutral num">Faltan ${money0(D.meta - r.k.accSold)}</span>` : ''}</div></div>
           <div class="tot"><b class="num">${money0(r.k.total)}</b><div class="sm num">Comisión ${money(r.k.com)}</div>${r.proy ? `<div class="sm num">Proy. ${money0(r.proy)}</div>` : ''}</div>
-          <div class="go"><button class="btn alt" data-ver="${esc(r.v.id)}" style="padding:7px 14px;font-size:13px">Ver</button></div></div>`;
+          <div class="go"><button class="btn alt sm" data-ver="${esc(r.v.id)}">Ver</button></div></div>`;
       }).join('') || '<div class="empty">No hay vendedores con cargo “Vendedor” en la hoja Comisiones.</div>'}</div></div>
   </div>
 
@@ -691,11 +796,74 @@ function vistaTienda() {
   <div class="updated">Datos al ${new Date(D.generado).toLocaleString('es-SV', { dateStyle: 'medium', timeStyle: 'short' })}</div>`;
 }
 
+/* ---------------- PDF: estado de comisiones ---------------- */
+function estadoHTML(vid) {
+  const D = S.data, v = D.vmap[vid] || { name: vid }, p = S.period, c = corte(vid, enPeriodo(p));
+  const meses = p.mode === 'month' ? [p.ym] : [...new Set(c.o.map(o => o.f.slice(0, 7)).concat(c.d.map(d => d.f.slice(0, 7))))].sort();
+  const metaRows = meses.map(ym => {
+    const acc = corte(vid, f => f && f.startsWith(ym)).accSold;
+    return `<tr><td>${cap1(MESES[+ym.slice(5, 7) - 1])} · ${money(acc)}</td><td>${acc >= D.meta ? '✓ +' + money(acc - D.meta) : 'Faltan ' + money(D.meta - acc)}</td></tr>`;
+  }).join('') || '<tr><td colspan="2">Sin ventas</td></tr>';
+  const devs = [...c.d].sort((a, b) => a.f.localeCompare(b.f));
+  const accs = [...c.it].sort((a, b) => a.f.localeCompare(b.f) || seq(a.o) - seq(b.o));
+  const gen = new Date().toLocaleString('es-SV', { dateStyle: 'medium', timeStyle: 'short' });
+  return `
+  <div class="pd-h">${CONFIG.LOGO_URL ? `<img src="${esc(CONFIG.LOGO_URL)}" alt="Phone SV">` : '<b>Phone SV</b>'}
+    <div><div class="t">Estado de comisiones</div><div class="p">${cap1(periodoTexto())}</div></div></div>
+  <div class="pd-info">
+    <div><span>Vendedor</span><b>${esc(v.name)}</b></div>
+    <div><span>Período</span><b>${cap1(periodoTexto())}</b></div>
+    <div><span>Generado</span><b>${gen}</b></div>
+  </div>
+  <div class="pd-sum">
+    <table class="pd-k"><tr><th colspan="2">Ventas</th></tr>
+      <tr><td>Dispositivos (${c.devN})</td><td>${money(c.devSold)}</td></tr>
+      <tr><td>Accesorios (${c.accU} u · ${c.accN} ped.)</td><td>${money(c.accSold)}</td></tr>
+      <tr class="tot"><td>Total vendido</td><td>${money(c.total)}</td></tr></table>
+    <table class="pd-k"><tr><th colspan="2">Comisiones</th></tr>
+      <tr><td>Dispositivos</td><td>${money(c.devCom)}</td></tr>
+      <tr><td>Accesorios</td><td>${money(c.accCom)}</td></tr>
+      <tr class="tot"><td>Total comisión</td><td>${money(c.com)}</td></tr></table>
+    <table class="pd-k"><tr><th colspan="2">Meta accesorios (${money(D.meta, 0)}/mes)</th></tr>
+      ${metaRows}
+      <tr><td>Com. acc. pagada</td><td>${money(c.paid)}</td></tr>
+      <tr class="tot"><td>Com. acc. pendiente</td><td>${money(c.pend)}</td></tr></table>
+  </div>
+
+  <h2>Dispositivos vendidos (${devs.length})</h2>
+  ${devs.length ? `<table class="pd-t"><thead><tr><th>Fecha</th><th>IMEI</th><th>Equipo</th><th>Canal · Pago</th><th class="r">Precio</th><th class="r">Comisión</th></tr></thead>
+    <tbody>${devs.map(x => `<tr><td class="m">${fmtDate(x.f)}</td><td class="m">${esc(x.imei || x.id)}</td>
+      <td>${esc(x.m)}<div class="sub">${esc([x.cap, x.col, x.est].filter(s => s && s !== '-').join(' · '))}</div></td>
+      <td>${esc([x.pos, x.pago].filter(Boolean).join(' · '))}</td><td class="r">${money(x.p)}</td><td class="r">${money(x.c)}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="4">Total dispositivos</td><td class="r">${money(c.devSold)}</td><td class="r">${money(c.devCom)}</td></tr></tfoot></table>`
+    : '<div class="pd-empty">Sin dispositivos vendidos en este período.</div>'}
+
+  <h2>Accesorios vendidos (${c.accU} u en ${c.accN} pedidos)</h2>
+  ${accs.length ? `<table class="pd-t"><thead><tr><th>Fecha</th><th>Pedido</th><th>Producto</th><th class="r">Cant.</th><th class="r">Total</th><th class="r">Comisión</th><th>Pago com.</th></tr></thead>
+    <tbody>${accs.map(x => `<tr><td class="m">${fmtDate(x.f)}</td><td class="m">${esc(x.o)}</td><td>${esc(x.n)}</td>
+      <td class="r">${x.q}</td><td class="r">${money(x.t)}</td><td class="r">${money(x.cc)}</td><td>${x.cc > 0 ? (x.pc === 'DONE' ? 'Pagada' : 'Pendiente') : '—'}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="3">Total accesorios</td><td class="r">${c.accU}</td><td class="r">${money(sum(accs, 't'))}</td><td class="r">${money(c.accCom)}</td><td></td></tr></tfoot></table>`
+    : '<div class="pd-empty">Sin accesorios vendidos en este período.</div>'}
+
+  <p class="pd-note">Solo se cuentan ventas marcadas como SOLD. Los dispositivos comisionan siempre. Los accesorios comisionan únicamente sobre lo vendido arriba de ${money(D.meta, 0)} en cada mes calendario (según Total_Items); el pedido que cruza la meta comisiona solo la parte que la sobrepasa.
+  El total de accesorios por producto puede diferir levemente del total de pedidos si un pedido tiene descuentos.</p>`;
+}
+async function imprimir() {
+  const v = S.data.vmap[S.vid] || {}, t = document.title, doc = $('#printDoc');
+  doc.innerHTML = estadoHTML(S.vid);
+  document.title = `Comisiones ${v.name || ''} ${periodoTexto()}`.trim();
+  const img = doc.querySelector('img');
+  if (img) { try { await img.decode(); } catch (e) {} }
+  window.print();
+  setTimeout(() => { document.title = t; }, 800);
+}
+
 /* ---------------- Render + eventos ---------------- */
 function render() {
   if (!S.data) return;
   app.innerHTML = S.view === 'vendor' ? vistaVendedor(S.vid) : vistaTienda();
 }
+const resetTabla = () => { S.limit = 10; S.dlim = {}; };
 
 app.addEventListener('click', e => {
   const t = e.target;
@@ -706,12 +874,15 @@ app.addEventListener('click', e => {
       const ym = S.period.ym; S.period.from = S.period.from || ym + '-01';
       S.period.to = S.period.to || (todayStr().startsWith(ym) ? todayStr() : ym + '-' + pad(daysIn(ym)));
     }
-    S.period.mode = mode; return render();
+    S.period.mode = mode; resetTabla(); return render();
   }
-  const tab = t.closest('#tabSeg button'); if (tab) { S.tab = tab.dataset.t; return render(); }
+  const tab = t.closest('#tabSeg button'); if (tab) { S.tab = tab.dataset.t; resetTabla(); return render(); }
   const row = t.closest('.prow');
-  if (row) { const g = row.parentElement, k = g.dataset.k; S.open.has(k) ? S.open.delete(k) : S.open.add(k); g.classList.toggle('open'); row.setAttribute('aria-expanded', g.classList.contains('open')); return; }
-  const ver = t.closest('[data-ver]'); if (ver) { S.view = 'vendor'; S.vid = ver.dataset.ver; S.open.clear(); window.scrollTo(0, 0); return render(); }
+  if (row) { const g = row.parentElement, k = g.dataset.k; g.classList.toggle('open'); const o = g.classList.contains('open'); o ? S.open.add(k) : S.open.delete(k); row.setAttribute('aria-expanded', o); return; }
+  const more = t.closest('[data-more]'); if (more) { S.limit = more.dataset.more === 'all' ? 1e9 : S.limit + 10; return render(); }
+  const dmore = t.closest('[data-dmore]'); if (dmore) { const k = dmore.dataset.dmore; S.dlim[k] = (S.dlim[k] || 10) + 20; S.open.add(k); return render(); }
+  if (t.closest('#fClear')) { S.f = { ...FILTROS0, sort: S.f.sort }; S.q = ''; resetTabla(); return render(); }
+  const ver = t.closest('[data-ver]'); if (ver) { S.view = 'vendor'; S.vid = ver.dataset.ver; S.open.clear(); resetTabla(); window.scrollTo(0, 0); return render(); }
   if (t.closest('#backStore')) { S.view = 'store'; window.scrollTo(0, 0); return render(); }
   if (t.closest('#btnPdf')) return imprimir();
   const b = t.closest('.bars .b');
@@ -721,28 +892,23 @@ app.addEventListener('click', e => {
   }
 });
 app.addEventListener('change', e => {
-  if (e.target.id === 'selMonth') { S.period.ym = e.target.value; render(); }
-  if (e.target.id === 'dFrom' || e.target.id === 'dTo') {
+  const id = e.target.id, v = e.target.value;
+  if (id === 'selMonth') { S.period.ym = v; resetTabla(); render(); }
+  if (id === 'dFrom' || id === 'dTo') {
     const a = $('#dFrom').value, b = $('#dTo').value;
-    if (a && b) { S.period.from = a <= b ? a : b; S.period.to = a <= b ? b : a; render(); }
+    if (a && b) { S.period.from = a <= b ? a : b; S.period.to = a <= b ? b : a; resetTabla(); render(); }
   }
+  const map = { fPos: 'pos', fPago: 'pago', fEst: 'est', fPc: 'pc', fSort: 'sort' };
+  if (map[id]) { S.f[map[id]] = v; resetTabla(); render(); }
 });
 app.addEventListener('input', e => {
   if (e.target.id === 'q') {
-    S.q = e.target.value; const pos = e.target.selectionStart; render();
+    S.q = e.target.value; resetTabla(); const pos = e.target.selectionStart; render();
     const q = $('#q'); if (q) { q.focus(); q.setSelectionRange(pos, pos); }
   }
 });
 $('#btnOut').addEventListener('click', () => { borrarToken(); try { google.accounts.id.disableAutoSelect(); } catch (e) {} S.data = null; showLogin(); });
 $('#btnRefresh').addEventListener('click', () => cargar(true));
-
-function imprimir() {
-  const v = S.data.vmap[S.vid] || {}, t = document.title;
-  document.title = `Comisiones ${v.name || ''} ${periodoTexto()}`.trim();
-  const abiertos = new Set(S.open);
-  window.print();
-  setTimeout(() => { document.title = t; S.open = abiertos; }, 500);
-}
 
 /* ---------------- Inicio ---------------- */
 (function start() {
