@@ -140,6 +140,37 @@ h2{font-size:21px;letter-spacing:-.02em;margin:0;font-weight:600}
 .pill.ok{color:var(--ok);background:var(--okbg)} .pill.warn{color:var(--warn);background:var(--warnbg)} .pill.bad{color:var(--bad);background:var(--badbg)}
 .pill.neutral{color:var(--muted);background:var(--track)}
 .pill.res{color:#fff;background:var(--res)}
+.ibox{position:relative;display:inline-flex;vertical-align:middle;margin-left:6px}
+.ibtn{width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--muted);font:600 12px/18px Georgia,serif;font-style:italic;cursor:pointer;padding:0}
+.itx{display:none;position:absolute;left:0;top:26px;z-index:20;width:min(320px,78vw);padding:10px 12px;border-radius:12px;background:var(--card);box-shadow:0 6px 24px rgba(0,0,0,.18);border:1px solid var(--line);font-size:12.5px;font-weight:400;color:var(--muted);line-height:1.45;letter-spacing:0;text-transform:none}
+@media (hover:hover){.ibox:hover .itx{display:block}}
+.ibox.open .itx{display:block}
+.rvh,.rvr{display:grid;grid-template-columns:minmax(0,1.5fr) 96px minmax(0,1fr) 110px 150px;gap:12px;align-items:center}
+.rvh{font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.03em;padding:0 12px 6px}
+.rvr{font-size:13.5px;padding:10px 12px;background:var(--bg);border-radius:12px;margin-top:6px;box-shadow:inset 3px 0 0 var(--res)}
+.rvr .id{font-weight:600;font-variant-numeric:tabular-nums;word-break:break-all}
+.rvr .s{font-size:12px;color:var(--muted)}
+.rvr .r{text-align:right}
+.rv-est{text-align:right;white-space:nowrap}
+.rv-est .pill{padding:3px 9px}
+.pill.late{color:#fff;background:var(--bad)}
+.rv-fut{font-size:12.5px;color:var(--muted)}
+details.rvd > summary{list-style:none;cursor:pointer}
+details.rvd > summary::-webkit-details-marker{display:none}
+.rvd .its{margin:4px 0 2px 12px;padding:6px 12px;border-left:2px solid var(--line);font-size:12.5px;color:var(--muted)}
+.rvd .its div{display:flex;justify-content:space-between;gap:10px;padding:2px 0}
+.rvd .rvver{color:var(--accent);font-size:12px}
+details.rvd[open] .rvver{display:none}
+.rv-sec{margin-top:18px}
+.rv-sec h3{margin-bottom:8px}
+@media (max-width:720px){
+  .rvh{display:none}
+  .rvr{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"id tt" "ve es";row-gap:4px}
+  .rvr .c-id{grid-area:id}.rvr .c-tt{grid-area:tt}.rvr .c-ve{grid-area:ve;font-size:12.5px;color:var(--muted)}.rvr .c-es{grid-area:es}.rvr .c-fe{display:none}
+  .rvr .id{word-break:normal;white-space:nowrap}
+  .rvr .only-m{display:inline}
+  .mtabs .seg.full button{font-size:13px;padding:8px 2px}
+}
 .rsvl{font-size:12.5px;color:var(--restx);margin-top:6px;font-variant-numeric:tabular-nums}
 .rsvl i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--res);margin-right:6px;vertical-align:1px}
 .rdot{flex:0 0 auto;width:8px;height:8px;border-radius:50%;background:var(--res)}
@@ -536,8 +567,8 @@ function corte(vid, pred) {
     devN: d.length, accN: o.length, accU: sum(it, 'q'),
     devCom, accCom, com: devCom + accCom,
     ganD, ganA, gan: ganD + ganA,
-    paid: sum(o.filter(x => x.pc === 'DONE'), 'cc'),
-    pend: sum(o.filter(x => x.pc !== 'DONE'), 'cc'),
+    paid: sum(o.filter(x => !x.r && x.pc === 'DONE'), 'cc'),      // solo comisión confirmada (SOLD)
+    pend: sum(o.filter(x => !x.r && x.pc !== 'DONE'), 'cc'),
     ...reservados(d, o, it)
   };
 }
@@ -546,16 +577,20 @@ function reservados(d, o, it) {
   const rd = d.filter(x => x.r), ro = o.filter(x => x.r), ri = it.filter(x => x.r);
   const resDev = sum(rd, 'p'), resAcc = sum(ro, 't');
   return { resDN: rd.length, resON: ro.length, resN: rd.length + ro.length, resDev, resAcc, resAmt: resDev + resAcc,
-    resDevCom: sum(rd, 'c'), resAccCom: sum(ro, 'cc'), resCom: sum(rd, 'c') + sum(ro, 'cc'), resMeta: sum(ri, 't') };
+    resDevCom: sum(rd, 'c'), resAccCom: sum(ro, 'cc'), resCom: sum(rd, 'c') + sum(ro, 'cc'), resMeta: sum(ri, 't'),
+    resGan: sum(rd, 'g') + sum(ro, 'g') };
 }
 const plural = (n, s, p) => n + ' ' + (n === 1 ? s : (p || s + 's'));
 // Línea naranja "incluye reservado" (vacía si no hay)
 function resLine(c, tipo, sty) {
   if (!c.resN) return '';
   const t = tipo === 'com'
-    ? (c.resCom > 0.004 ? `${money(c.resCom)} de comisión por confirmar` : '')
-    : tipo === 'meta' ? (c.resMeta > 0 ? `${money(c.resMeta)} del avance está reservado` : '')
-    : `Incluye ${money0(c.resAmt)} reservado (${plural(c.resN, 'venta')})`;
+    ? (c.resCom > 0.004 ? `Incluye ${money(c.resCom)} de ventas reservadas (se confirma al pasar a SOLD)` : '')
+    : tipo === 'comA' ? (c.resCom > 0.004 ? `Incluye ${money(c.resCom)} de comisión reservada · Disp. ${money(c.resDevCom)} · Acc. ${money(c.resAccCom)}` : '')
+    : tipo === 'gan' ? (c.resGan ? `Incluye ${money0(c.resGan)} de ganancia de ventas reservadas` : '')
+    : tipo === 'meta' ? (c.resMeta > 0 ? `Incluye ${money(c.resMeta)} reservado en la meta de accesorios` : '')
+    : tipo === 'tienda' ? `De la venta total, ${money0(c.resAmt)} ${c.resN === 1 ? 'está reservado' : 'está reservado'}`
+    : `De tus ventas totales, ${money0(c.resAmt)} ${c.resN === 1 ? 'está reservado' : 'están reservadas'}`;
   return t ? `<div class="rsvl" ${sty ? `style="${sty}"` : ''}><i></i>${t}</div>` : '';
 }
 function deltaHTML(a, b, label) {
@@ -859,7 +894,7 @@ function rankingEquipo(vid, movil) {
       <div class="seg full" id="mrankSeg"><button data-mrank="acc" class="${t === 'acc' ? 'on' : ''}">Meta accesorios</button><button data-mrank="dev" class="${t === 'dev' ? 'on' : ''}">Dispositivos</button></div>
       ${me ? `<div class="mr-me"><span class="mr-pos">#${me.pos}</span><span>de ${lista.length} · ${t === 'dev' ? me.u + ' equipo' + (me.u === 1 ? '' : 's') : Math.round(me.p) + '% de la meta'}</span></div>` : ''}
       <div class="lb-msg" style="margin:0 0 12px">${t === 'dev' ? msgD : msgA}</div>
-      ${t === 'dev' ? listaD : listaA}</div></div>`;
+      ${t === 'dev' ? listaD : listaA}<p class="note" style="text-align:center">Incluye ventas reservadas.</p></div></div>`;
   }
   return `<div class="grid g2">
     <div class="card"><h3>Ranking · Meta de accesorios · ${ymLabel(p.ym)}</h3>
@@ -868,7 +903,7 @@ function rankingEquipo(vid, movil) {
     <div class="card"><h3>Ranking · Dispositivos vendidos · ${ymLabel(p.ym)}</h3>
       ${dev.length ? `<ul class="lb">${dev.map(x => fila(x, x.u + ' equipo' + (x.u === 1 ? '' : 's'), x.u / maxU * 100, false)).join('')}</ul>` : '<div class="empty">Aún no hay dispositivos vendidos este mes.</div>'}
       <div class="lb-msg">${msgD}</div></div>
-  </div>`;
+  </div><p class="note" style="text-align:center;margin:-6px 0 0">El ranking incluye ventas reservadas.</p>`;
 }
 
 /* ---------------- Vista Vendedor ---------------- */
@@ -910,9 +945,9 @@ function vistaVendedor(vid) {
   ${rankingEquipo(vid)}
 
   <div class="grid g12">
-    <div class="card cc"><h3>Comisión de accesorios</h3><div class="body">
-      <div class="viz">${donut(pago, { size: 140, stroke: 15, center: money0(c.accCom), sub: 'accesorios' })}${legend(pago)}</div>
-      <div class="note">Según la columna Pago Comision de cada pedido.</div>
+    <div class="card cc"><h3>Comisión de accesorios confirmada</h3><div class="body">
+      <div class="viz">${donut(pago, { size: 140, stroke: 15, center: money0(c.paid + c.pend), sub: 'accesorios' })}${legend(pago)}</div>
+      <div class="note">Solo comisión confirmada (SOLD), según Pago Comision.</div>
     </div></div>
     <div class="card"><h3>Ventas por ${S.period.mode === 'range' && barsData(c).byMonth ? 'mes' : 'día'}</h3>${bars(c)}</div>
   </div>
@@ -935,8 +970,8 @@ function comparativoDatos(pred) {
 }
 function comparativoHTML(pred) {
   const { porV, meses } = comparativoDatos(pred), T = porV.reduce((s, x) => ({ o: s.o + x.k.accOld, n: s.n + x.k.accCom, d: s.d + x.k.devCom }), { o: 0, n: 0, d: 0 });
-  return `<div class="card pad-lg"><div class="ptools"><h2>Comisión de accesorios · antigua vs métrica</h2>
-      <span class="muted" style="font-size:13px">Antigua = Comision_Vendedor (10% de todo) · Métrica = Comision_Metrica (5% Original / 10% resto, arriba de ${money(S.data.meta, 0)})</span></div>
+  return `<div class="card pad-lg"><div class="ptools"><h2>Comisión de accesorios · antigua vs métrica<span class="ibox"><button class="ibtn" aria-label="Información">i</button>
+      <span class="itx">Antigua = Comision_Vendedor (10% de todo). Métrica = Comision_Metrica (5% Original / 10% resto, arriba de ${money(S.data.meta, 0)}). Diferencia = métrica − antigua, en verde cuando la tienda paga menos. La comisión de dispositivos no cambia: ${money(T.d)} en el período. Incluye ventas reservadas.</span></span></h2></div>
     <div class="ctab"><div class="ch"><span>Vendedor · ${periodoTexto()}</span><span>Antigua</span><span>Métrica</span><span>Diferencia</span></div>
       ${porV.map(x => `<div class="cr"><span>${esc(x.v.name)}</span><span class="num">${money(x.k.accOld)}</span><span class="num"><b>${money(x.k.accCom)}</b></span><span class="num">${difTxt(x.k.accDif)}</span></div>`).join('') || '<div class="empty">Sin ventas en este período.</div>'}
       ${porV.length ? `<div class="cr tot"><span>${esMovil() ? 'Total' : 'Total vendedores'}</span><span class="num">${money(T.o)}</span><span class="num">${money(T.n)}</span><span class="num">${difTxt(T.n - T.o)}</span></div>` : ''}
@@ -945,16 +980,49 @@ function comparativoHTML(pred) {
     <div class="ctab"><div class="ch"><span>Mes</span><span>Antigua</span><span>Métrica</span><span>Diferencia</span></div>
       ${meses.map(m => `<div class="cr"><span>${esMovil() ? cap1(MESES[+m.ym.slice(5, 7) - 1].slice(0, 3)) + ' ' + m.ym.slice(0, 4) : cap1(ymLabel(m.ym))}</span><span class="num">${money(m.old)}</span><span class="num"><b>${money(m.neu)}</b></span><span class="num">${difTxt(m.neu - m.old)}</span></div>`).join('')}
     </div>
-    <p class="note">Diferencia = métrica − antigua (en verde cuando la tienda paga menos). La comisión de dispositivos no cambia: ${money(T.d)} en el período.</p></div>`;
+    </div>`;
 }
 
 /* ---------------- Vista Admin ---------------- */
-function pendientesHTML(c) {
-  return `<div class="kv"><span class="muted">Dispositivos reservados</span><span><b class="num">${c.resDN}</b><span class="s num">${money0(c.resDev)}</span></span></div>
-    <div class="kv"><span class="muted">Pedidos de accesorios reservados</span><span><b class="num">${c.resON}</b><span class="s num">${money0(c.resAcc)}</span></span></div>
-    <div class="kv"><span class="muted">Comisión por confirmar</span><b class="num">${money(c.resCom)}</b></div>
-    <div class="kv"><span class="muted">Comisión de accesorios por pagar</span><b class="num">${money(c.pend)}</b></div>
-    <p class="note">Los reservados ya suman en ventas, metas y comisiones como proyección hasta que pasen a SOLD.</p>`;
+/* ----- Reservas: todo lo RESERVED actual, sin importar el período ----- */
+function diasDesde(f) { const a = Date.UTC(+f.slice(0, 4), +f.slice(5, 7) - 1, +f.slice(8, 10)), h = todayStr(); return Math.round((Date.UTC(+h.slice(0, 4), +h.slice(5, 7) - 1, +h.slice(8, 10)) - a) / 86400000); }
+function estadoReserva(f, pdf) {
+  if (!f) return '—';
+  const d = diasDesde(f);
+  if (d === 0) return pdf ? 'Hoy' : '<span class="pill warn" style="color:#fff;background:var(--res)">Hoy</span>';
+  if (d > 0) { const t = `Vencido · hace ${plural(d, 'día')}`; return pdf ? t : `<span class="pill late">${t}</span>`; }
+  const t = `En ${plural(-d, 'día')}`; return pdf ? t : `<span class="rv-fut">${t}</span>`;
+}
+function reservasDatos() {
+  const D = S.data, nom = id => (D.vmap[id] || {}).name || id || '—';
+  const its = {}; D.items.forEach(i => { if (i.r) (its[i.o] ||= []).push(i); });
+  const ord = (a, b) => (a.f || '9').localeCompare(b.f || '9') || seq(a.id) - seq(b.id);
+  return {
+    acc: D.orders.filter(o => o.r).sort(ord).map(o => ({ o, v: nom(o.v), it: its[o.id] || [] })),
+    dev: D.devices.filter(d => d.r).sort(ord).map(d => ({ d, v: nom(d.v) })),
+    nom
+  };
+}
+function reservasHTML() {
+  const { acc, dev } = reservasDatos();
+  const tot = sum(acc.map(x => x.o), 't') + sum(dev.map(x => x.d), 'p'), n = acc.length + dev.length;
+  const venc = acc.filter(x => x.o.f && diasDesde(x.o.f) > 0).length + dev.filter(x => x.d.f && diasDesde(x.d.f) > 0).length;
+  const head = (a, b) => `<div class="rvh"><span>${a}</span><span>Fecha venta</span><span>Vendedor</span><span class="r">${b}</span><span class="r">Estado</span></div>`;
+  const filaAcc = x => `<details class="rvd"><summary class="rvr">
+      <div class="c-id"><div class="id">${esc(x.o.id)}</div><div class="s">${plural(sum(x.it, 'q') || x.it.length, 'artículo')} · <span class="rvver">ver ›</span></div></div>
+      <div class="num c-fe">${fmtDate(x.o.f)}</div><div class="c-ve">${esc(x.v)}<span class="only-m"> · ${fmtDate(x.o.f)}</span></div>
+      <div class="r num c-tt"><b>${money(x.o.t)}</b></div><div class="rv-est c-es">${estadoReserva(x.o.f)}</div></summary>
+      <div class="its">${x.it.map(i => `<div><span>${i.q} × ${esc(i.n)}</span><span class="num">${money(i.t)}</span></div>`).join('') || '<div>Sin artículos registrados</div>'}</div></details>`;
+  const filaDev = x => `<div class="rvr">
+      <div class="c-id"><div class="id">${esc(x.d.imei || x.d.id)}</div><div class="s">${esc([x.d.m, x.d.cap, x.d.col].filter(v => v && v !== '-').join(' · '))}</div></div>
+      <div class="num c-fe">${fmtDate(x.d.f)}</div><div class="c-ve">${esc(x.v)}<span class="only-m"> · ${fmtDate(x.d.f)}</span></div>
+      <div class="r num c-tt"><b>${money(x.d.p)}</b></div><div class="rv-est c-es">${estadoReserva(x.d.f)}</div></div>`;
+  return `<div class="card pad-lg"><div class="ptools"><h2>Reservas · ${n}</h2>
+      <span class="muted num" style="font-size:13px">${money0(tot)} por confirmar${venc ? ` · <b style="color:var(--bad)">${plural(venc, 'vencida')}</b>` : ''} · todas las fechas</span></div>
+    ${n ? '' : '<div class="empty">No hay ventas reservadas. Todo está confirmado.</div>'}
+    ${acc.length ? `<div class="rv-sec"><h3>Pedidos de accesorios (${acc.length})</h3>${head('N° de pedido', 'Total')}${acc.map(filaAcc).join('')}</div>` : ''}
+    ${dev.length ? `<div class="rv-sec"><h3>Dispositivos (${dev.length})</h3>${head('IMEI', 'Precio')}${dev.map(filaDev).join('')}</div>` : ''}
+  </div>`;
 }
 function vistaTienda() {
   const D = S.data, pred = enPeriodo(S.period), c = corte(null, pred);
@@ -991,7 +1059,7 @@ function vistaTienda() {
             <div class="sm num"><span class="ln">Disp. ${money0(r.k.devSold)} · ${r.k.devN} u</span><span class="sep"> · </span><span class="ln">Acc. ${money0(r.k.accSold)} · ${r.k.accN} ped.</span></div></div>
           <div class="pills"><span class="pill ${cls}"><span class="sd"></span>${txt}</span>
             ${r.pct != null && r.pct < 1 ? `<span class="pill neutral num">Faltan ${money(D.meta - r.k.accMeta, 0)}</span>` : ''}</div>
-          <div class="tot"><b class="num">${money0(r.k.total)}</b><span class="sm num">Comisión ${money(r.k.com)}</span><span class="sm num">Antigua ${money(r.k.comOld)}</span>${r.proy ? `<span class="sm num">Proy. ${money0(r.proy)}</span>` : ''}</div>
+          <div class="tot"><b class="num">${money0(r.k.total)}</b><span class="sm num">Comisión ${money(r.k.com)}</span><span class="sm num">Antigua ${money(r.k.comOld)}</span>${r.proy ? `<span class="sm num">Proy. venta ${money0(r.proy)}</span>` : ''}</div>
           <div class="go"><button class="btn alt sm" data-ver="${esc(r.v.id)}">Ver</button></div></div>`;
       }).join('') || '<div class="empty">Ningún vendedor tiene ventas en este período.</div>';
   if (esMovil()) return tiendaMovil({ c, prev, pl, ticket, pticket, tD, tA, proy, mix, canales, pagos, rankHTML, top, tp, tg });
@@ -1008,12 +1076,13 @@ function vistaTienda() {
       <div class="big num">${money0(c.total)}</div>${prev ? deltaHTML(c.total, prev.total, pl) : ''}
       ${kvs([['Dispositivos', money0(c.devSold), c.devN + ' u'], ['Accesorios', money0(c.accSold), c.accN + ' ped.']])}
       ${proy ? `<div class="note num">Proyección del mes: <b>${money0(proy)}</b></div>` : ''}
-      ${resLine(c)}
+      ${resLine(c, 'tienda')}
     </div></div>
     <div class="card cc"><h3>Ganancia</h3><div class="body">
       <div class="big num">${money0(c.gan)}</div>${prev ? deltaHTML(c.gan, prev.gan, pl) : ''}
       ${kvs([['Dispositivos', money0(c.ganD), pct(c.ganD, c.devSold)], ['Accesorios', money0(c.ganA), pct(c.ganA, c.accSold)]])}
       <div class="note num">Margen total ${pct(c.gan, c.total)}</div>
+      ${resLine(c, 'gan')}
     </div></div>
     <div class="card cc"><h3>Ticket promedio</h3><div class="body">
       <div class="big num">${money0(ticket)}</div>${prev ? deltaHTML(ticket, pticket, pl) : ''}
@@ -1022,8 +1091,8 @@ function vistaTienda() {
     <div class="card cc"><h3>Comisiones (según métrica)</h3><div class="body">
       <div class="big num">${money0(c.com)}</div>${prev ? deltaHTML(c.com, prev.com, pl) : ''}
       ${kvs([['Dispositivos', money(c.devCom)], ['Acc. según métrica', money(c.accCom)], ['Acc. antigua', money(c.accOld)], ['Diferencia acc.', difTxt(c.accDif)]])}
-      <div class="note num">Accesorios por pagar: <b>${money(c.pend)}</b></div>
-      ${resLine(c, 'com')}
+      <div class="note num">Accesorios por pagar (confirmada): <b>${money(c.pend)}</b></div>
+      ${resLine(c, 'comA')}
     </div></div>
   </div>
 
@@ -1040,10 +1109,9 @@ function vistaTienda() {
 
   <div class="grid g1">${comparativoHTML(pred)}</div>
 
-  <div class="grid g21">
-    <div class="card"><h3>Ventas por ${barsData(c).byMonth ? 'mes' : 'día'}</h3>${bars(c)}</div>
-    <div class="card"><h3>Reservados y pendientes</h3>${pendientesHTML(c)}</div>
-  </div>
+  <div class="grid g1"><div class="card"><h3>Ventas por ${barsData(c).byMonth ? 'mes' : 'día'}</h3>${bars(c)}</div></div>
+
+  <div class="grid g1">${reservasHTML()}</div>
 
   <div class="grid g2">
     <div class="card"><h3>Top productos por venta</h3>${hbars(top(tp), money0)}</div>
@@ -1087,10 +1155,10 @@ function vendedorMovil(vid, v, c, prev, pl, nombre) {
     const items = [
       { k: 'vend', l: 'Vendido', v: money0(c.total), d: prev ? deltaMini(c.total, prev.total) : '',
         det: kvs([['Dispositivos', money(c.devSold), c.devN + ' u'], ['Accesorios', money(c.accSold), c.accU + ' u · ' + c.accN + ' ped.']]) + resLine(c, '', 'text-align:center') + (prev ? `<div style="text-align:center">${deltaHTML(c.total, prev.total, pl)}</div>` : '') },
-      { k: 'com', l: 'Comisión', v: money0(c.com), d: prev ? deltaMini(c.com, prev.com) : '',
+      { k: 'com', l: 'Comisión total', v: money0(c.com), d: prev ? deltaMini(c.com, prev.com) : '',
         det: kvs([['Dispositivos', money(c.devCom)], ['Accesorios', money(c.accCom)]]) + resLine(c, 'com', 'text-align:center') + (prev ? `<div style="text-align:center">${deltaHTML(c.com, prev.com, pl)}</div>` : '') },
-      { k: 'cob', l: 'Por cobrar', v: money0(c.pend), d: '<small class="flat">accesorios</small>',
-        det: kvs([['Comisión acc. pagada', money(c.paid)], ['Comisión acc. pendiente', money(c.pend)]]) + '<p class="note" style="text-align:center">Según la columna Pago Comision de cada pedido. La comisión de dispositivos no tiene estado de pago.</p>' }
+      { k: 'cob', l: 'Por cobrar', v: money0(c.pend), d: '<small class="flat">comisión acc.</small>',
+        det: kvs([['Comisión acc. pagada', money(c.paid)], ['Comisión acc. pendiente', money(c.pend)]]) + '<p class="note" style="text-align:center">Solo comisión de accesorios confirmada (SOLD), según Pago Comision. La comisión de dispositivos no tiene estado de pago.</p>' }
     ];
     cuerpo = `<div class="grid g1"><div class="card cc msum"><h3>Tu mes · ${periodoTexto()}</h3><div class="body">${metaHTML}</div>${statsHTML(items)}</div></div>`;
   } else if (tab === 'eq') {
@@ -1116,28 +1184,29 @@ function tiendaMovil(x) {
   if (tab === 'res') {
     const items = [
       { k: 'vend', l: 'Vendido', v: money0(c.total), d: prev ? deltaMini(c.total, prev.total) : '',
-        det: kvs([['Dispositivos', money0(c.devSold), c.devN + ' u'], ['Accesorios', money0(c.accSold), c.accN + ' ped.']]) + resLine(c, '', 'text-align:center') + (x.proy ? `<div class="note num" style="text-align:center">Proyección del mes: <b>${money0(x.proy)}</b></div>` : '') },
+        det: kvs([['Dispositivos', money0(c.devSold), c.devN + ' u'], ['Accesorios', money0(c.accSold), c.accN + ' ped.']]) + resLine(c, 'tienda', 'text-align:center') + (x.proy ? `<div class="note num" style="text-align:center">Proyección del mes: <b>${money0(x.proy)}</b></div>` : '') },
       { k: 'gan', l: 'Ganancia', v: money0(c.gan), d: prev ? deltaMini(c.gan, prev.gan) : '',
-        det: kvs([['Dispositivos', money0(c.ganD), pct(c.ganD, c.devSold)], ['Accesorios', money0(c.ganA), pct(c.ganA, c.accSold)]]) + `<div class="note num" style="text-align:center">Margen total ${pct(c.gan, c.total)}</div>` },
+        det: kvs([['Dispositivos', money0(c.ganD), pct(c.ganD, c.devSold)], ['Accesorios', money0(c.ganA), pct(c.ganA, c.accSold)]]) + `<div class="note num" style="text-align:center">Margen total ${pct(c.gan, c.total)}</div>` + resLine(c, 'gan', 'text-align:center') },
       { k: 'tic', l: 'Ticket promedio', v: money0(x.ticket), d: prev ? deltaMini(x.ticket, x.pticket) : '',
         det: kvs([['Dispositivos', money0(x.tD), c.devN + ' ventas'], ['Accesorios', money0(x.tA), c.accN + ' pedidos']]) },
       { k: 'com', l: 'Comisiones', v: money0(c.com), d: prev ? deltaMini(c.com, prev.com) : '',
-        det: kvs([['Dispositivos', money(c.devCom)], ['Acc. según métrica', money(c.accCom)], ['Acc. antigua', money(c.accOld)], ['Diferencia acc.', difTxt(c.accDif)], ['Accesorios por pagar', money(c.pend)]]) + resLine(c, 'com', 'text-align:center') }
+        det: kvs([['Dispositivos', money(c.devCom)], ['Acc. según métrica', money(c.accCom)], ['Acc. antigua', money(c.accOld)], ['Diferencia acc.', difTxt(c.accDif)], ['Acc. por pagar (confirmada)', money(c.pend)]]) + resLine(c, 'comA', 'text-align:center') }
     ];
     const dist = S.mdist, segs = dist === 'pos' ? x.canales : dist === 'pago' ? x.pagos : x.mix;
     const centro = dist === 'mix' ? (c.total ? Math.round(c.devSold / c.total * 100) + '%' : '—') : segs.length;
     const sub = dist === 'mix' ? 'dispositivos' : dist === 'pos' ? 'canales' : 'métodos';
-    cuerpo = `<div class="grid g1"><div class="card"><h3>Resumen · ${periodoTexto()}</h3>${c.resN ? `<div style="margin:-4px 0 10px"><span class="pill res">${plural(c.resN, 'reservado')} · ${money0(c.resAmt)}</span></div>` : ''}${statsHTML(items, 's2')}</div></div>
+    cuerpo = `<div class="grid g1"><div class="card"><h3>Resumen · ${periodoTexto()}</h3>${c.resN ? `<div style="margin:-4px 0 10px"><span class="pill res">${money0(c.resAmt)} reservado</span></div>` : ''}${statsHTML(items, 's2')}</div></div>
       <div class="grid g1"><div class="card cc"><h3>Distribución de ventas</h3>
         <div class="seg full"><button data-mdist="mix" class="${dist === 'mix' ? 'on' : ''}">Mezcla</button><button data-mdist="pos" class="${dist === 'pos' ? 'on' : ''}">Canales</button><button data-mdist="pago" class="${dist === 'pago' ? 'on' : ''}">Pagos</button></div>
         <div class="body"><div class="viz">${donut(segs, { size: 150, stroke: 16, center: centro, sub })}${legend(segs, money0)}</div></div></div></div>
-      <div class="grid g1"><div class="card"><h3>Ventas por ${barsData(c).byMonth ? 'mes' : 'día'}</h3>${bars(c)}</div></div>
-      <div class="grid g1"><div class="card"><h3>Reservados y pendientes</h3>${pendientesHTML(c)}</div></div>`;
+      <div class="grid g1"><div class="card"><h3>Ventas por ${barsData(c).byMonth ? 'mes' : 'día'}</h3>${bars(c)}</div></div>`;
   } else if (tab === 'ven') {
     cuerpo = `<div class="grid g1"><div class="card"><h3>Vendedores · ${periodoTexto()}</h3>
       <p class="note" style="margin:-6px 0 6px">Anillo = avance de la meta de accesorios (${money(D.meta, 0)})</p>
       <div class="rank">${x.rankHTML}</div></div></div>
       <div class="grid g1">${comparativoHTML(enPeriodo(S.period))}</div>`;
+  } else if (tab === 'rsv') {
+    cuerpo = `<div class="grid g1">${reservasHTML()}</div>`;
   } else {
     const t = S.mtop;
     cuerpo = `<div class="grid g1"><div class="card"><h3>Top productos · ${periodoTexto()}</h3>
@@ -1150,7 +1219,7 @@ function tiendaMovil(x) {
       <h1>Tienda.<span class="sub">El desempeño de todos.</span></h1></div>
     ${periodHTML()}
   </section>
-  ${mtabsHTML('s', [['res', 'Resumen'], ['ven', 'Vendedores'], ['pro', 'Productos']])}
+  ${mtabsHTML('s', [['res', 'Resumen'], ['ven', 'Vendedores'], ['pro', 'Productos'], ['rsv', 'Reservas']])}
   ${cuerpo}${upd}`;
 }
 
@@ -1181,11 +1250,11 @@ function estadoHTML(vid) {
     <table class="pd-k"><tr><th colspan="2">Comisiones</th></tr>
       <tr><td>Dispositivos</td><td>${money(c.devCom)}</td></tr>
       <tr><td>Accesorios</td><td>${money(c.accCom)}</td></tr>
-      <tr class="tot"><td>Total comisión</td><td>${money(c.com)}</td></tr>${c.resCom > 0.004 ? `<tr><td>Por confirmar (reservado)</td><td>${money(c.resCom)}</td></tr>` : ''}</table>
+      <tr class="tot"><td>Total comisión</td><td>${money(c.com)}</td></tr>${c.resCom > 0.004 ? `<tr><td>Incluye reservado</td><td>${money(c.resCom)}</td></tr>` : ''}</table>
     <table class="pd-k"><tr><th colspan="2">Meta accesorios (${money(D.meta, 0)}/mes)</th></tr>
       ${metaRows}
-      <tr><td>Com. acc. pagada</td><td>${money(c.paid)}</td></tr>
-      <tr class="tot"><td>Com. acc. pendiente</td><td>${money(c.pend)}</td></tr></table>
+      <tr><td>Com. acc. pagada (SOLD)</td><td>${money(c.paid)}</td></tr>
+      <tr class="tot"><td>Com. acc. pendiente (SOLD)</td><td>${money(c.pend)}</td></tr></table>
   </div>
 
   <h2>Dispositivos vendidos (${devs.length}${c.resDN ? ' · ' + c.resDN + ' reservado' + (c.resDN === 1 ? '' : 's') : ''})</h2>
@@ -1260,7 +1329,7 @@ function reporteTiendaHTML() {
       <tr class="tot"><td>General</td><td>${money(tT)}</td></tr></table>
     <table class="pd-k"><tr><th colspan="2">Comisiones</th></tr>
       <tr><td>Dispositivos</td><td>${money(c.devCom)}</td></tr><tr><td>Accesorios</td><td>${money(c.accCom)}</td></tr>
-      <tr class="tot"><td>Total</td><td>${money(c.com)}</td></tr><tr><td>Acc. por pagar</td><td>${money(c.pend)}</td></tr>${c.resCom > 0.004 ? `<tr><td>Por confirmar</td><td>${money(c.resCom)}</td></tr>` : ''}</table>
+      <tr class="tot"><td>Total</td><td>${money(c.com)}</td></tr><tr><td>Acc. por pagar (SOLD)</td><td>${money(c.pend)}</td></tr>${c.resCom > 0.004 ? `<tr><td>Incluye reservado</td><td>${money(c.resCom)}</td></tr>` : ''}</table>
   </div>
 
   <h2>Vendedores</h2>
@@ -1282,10 +1351,12 @@ function reporteTiendaHTML() {
   <table class="pd-t"><thead><tr><th class="r">#</th><th>Producto</th><th>Tipo</th><th class="r">Cant.</th><th class="r">Vendido</th><th class="r">Ganancia</th><th class="r">Margen</th></tr></thead>
     <tbody>${top.map((x, i) => `<tr><td class="r">${i + 1}</td><td>${esc(x.n)}</td><td>${x.t}</td><td class="r">${x.q}</td><td class="r">${money(x.v)}</td><td class="r">${money(x.g)}</td><td class="r">${pct(x.g, x.v)}</td></tr>`).join('') || '<tr><td colspan="7">Sin ventas</td></tr>'}</tbody></table>
 
-  <h2>Reservados del período (incluidos arriba como proyección)</h2>
-  <table class="pd-k" style="max-width:380px"><tr><td>Dispositivos reservados (${c.resDN})</td><td>${money(c.resDev)}</td></tr>
-    <tr><td>Pedidos de accesorios reservados (${c.resON})</td><td>${money(c.resAcc)}</td></tr>
-    <tr class="tot"><td>Comisión por confirmar</td><td>${money(c.resCom)}</td></tr></table>
+  ${(() => { const { acc, dev } = reservasDatos(); if (!acc.length && !dev.length) return '';
+    return `<h2>Reservas por confirmar (todas las fechas)</h2>
+    ${acc.length ? `<table class="pd-t"><thead><tr><th>N° de pedido</th><th>Fecha venta</th><th>Vendedor</th><th>Artículos</th><th class="r">Total</th><th>Estado</th></tr></thead>
+      <tbody>${acc.map(x => `<tr><td class="m">${esc(x.o.id)}</td><td class="m">${fmtDate(x.o.f)}</td><td>${esc(x.v)}</td><td>${x.it.map(i => i.q + ' × ' + esc(i.n)).join('<br>')}</td><td class="r">${money(x.o.t)}</td><td class="m">${estadoReserva(x.o.f, true)}</td></tr>`).join('')}</tbody></table>` : ''}
+    ${dev.length ? `<table class="pd-t" style="margin-top:8px"><thead><tr><th>IMEI</th><th>Equipo</th><th>Fecha venta</th><th>Vendedor</th><th class="r">Precio</th><th>Estado</th></tr></thead>
+      <tbody>${dev.map(x => `<tr><td class="m">${esc(x.d.imei || x.d.id)}</td><td>${esc(x.d.m)}<div class="sub">${esc([x.d.cap, x.d.col].filter(v => v && v !== '-').join(' · '))}</div></td><td class="m">${fmtDate(x.d.f)}</td><td>${esc(x.v)}</td><td class="r">${money(x.d.p)}</td><td class="m">${estadoReserva(x.d.f, true)}</td></tr>`).join('')}</tbody></table>` : ''}`; })()}
 
   <p class="pd-note">Se cuentan ventas SOLD y RESERVED (los reservados son proyección hasta que pasen a SOLD). Meta de accesorios: ${money(D.meta, 0)} por vendedor y mes calendario; los accesorios comisionan solo sobre lo vendido arriba de la meta (5% Original / 10% resto, Comision_Metrica) y los dispositivos comisionan siempre. Comisión antigua = Comision_Vendedor.
   La ganancia es la registrada en AppSheet (columnas Ganancia / Ganancia_Fila). La proyección supone el mismo promedio diario para el resto del mes.</p>`;
@@ -1327,6 +1398,9 @@ app.addEventListener('click', e => {
     const bar = $('.mtabs'); if (bar) { const top = bar.offsetTop - 52; if (y > top) window.scrollTo(0, top); }
     return;
   }
+  const ib = t.closest('.ibtn');
+  if (ib) { const b = ib.parentElement, o = b.classList.contains('open'); document.querySelectorAll('.ibox.open').forEach(x => x.classList.remove('open')); if (!o) b.classList.add('open'); return; }
+  if (!t.closest('.ibox')) document.querySelectorAll('.ibox.open').forEach(x => x.classList.remove('open'));
   const md = t.closest('[data-mdet]'); if (md) { S.mdet = S.mdet === md.dataset.mdet ? null : md.dataset.mdet; return render(); }
   const mr = t.closest('[data-mrank]'); if (mr) { S.mrank = mr.dataset.mrank; return render(); }
   const mdi = t.closest('[data-mdist]'); if (mdi) { S.mdist = mdi.dataset.mdist; return render(); }
