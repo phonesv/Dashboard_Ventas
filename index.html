@@ -124,8 +124,11 @@ h2{font-size:21px;letter-spacing:-.02em;margin:0;font-weight:600}
 .legend .val{font-weight:600}
 .legend .pct{color:var(--muted);font-weight:500;margin-left:6px;font-size:12px;display:inline-block;min-width:30px;text-align:right}
 .arc{animation:draw 1s cubic-bezier(.2,.8,.2,1) both}
+.arc2{animation-delay:.85s;animation-duration:.9s}
+.tip{animation:tipin .25s 1.65s both}
+@keyframes tipin{from{opacity:0}}
 @keyframes draw{from{stroke-dasharray:0 2000}}
-@media (prefers-reduced-motion:reduce){.arc{animation:none}}
+@media (prefers-reduced-motion:reduce){.arc,.tip{animation:none}}
 
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
 .pill.ok{color:var(--ok);background:var(--okbg)} .pill.warn{color:var(--warn);background:var(--warnbg)} .pill.bad{color:var(--bad);background:var(--badbg)}
@@ -142,16 +145,49 @@ h2{font-size:21px;letter-spacing:-.02em;margin:0;font-weight:600}
 .key span{display:inline-flex;align-items:center;gap:6px}
 .key i{width:9px;height:9px;border-radius:3px;display:inline-block}
 
-/* RANK */
+/* RANK (admin) */
 .rank{display:flex;flex-direction:column}
-.rk{display:grid;grid-template-columns:26px 54px 1fr auto auto;gap:14px;align-items:center;padding:14px 4px}
+.rk{display:grid;grid-template-columns:26px 54px minmax(0,1fr) auto auto;grid-template-areas:"pos ring info tot go" "pos ring pills tot go";
+  column-gap:14px;row-gap:6px;align-items:center;padding:14px 4px}
 .rk + .rk{border-top:1px solid var(--line)}
-.rk .pos{font-size:15px;font-weight:600;color:var(--faint);text-align:center}
+.rk .pos{grid-area:pos;font-size:15px;font-weight:600;color:var(--faint);text-align:center}
+.rk .ring{grid-area:ring}.rk .info{grid-area:info;min-width:0}.rk .tot{grid-area:tot;text-align:right}.rk .go{grid-area:go}
+.rk .pills{grid-area:pills;display:flex;gap:6px;flex-wrap:wrap}
+.rk .pill{white-space:nowrap}
 .rk .nm{font-weight:600;font-size:16px;letter-spacing:-.01em}
 .rk .sm{font-size:12.5px;color:var(--muted)}
-.rk .tot{text-align:right}
 .rk .tot b{font-size:17px;font-weight:600;letter-spacing:-.01em}
-@media (max-width:700px){.rk{grid-template-columns:22px 48px 1fr auto}.rk .go{grid-column:3/5;justify-self:start}}
+.rk .tot .sm{display:block}
+.rk .ln{white-space:nowrap}
+@media (max-width:700px){
+  .rk .ln{display:block}.rk .sep{display:none}
+  .rk{grid-template-columns:20px 46px minmax(0,1fr) auto;grid-template-areas:"pos ring info go" "pos ring tot tot" "pos pills pills pills";column-gap:12px;row-gap:6px}
+  .rk .ring{align-self:start}
+  .rk .tot{text-align:left}
+  .rk .tot b{display:block}
+  .rk .tot b{font-size:16px}
+  .rk .go{align-self:start}
+  .rk .pills{flex-wrap:wrap;gap:5px}
+  .rk .pill{font-size:11px;padding:3px 8px;gap:5px}
+}
+
+/* RANKING DEL EQUIPO (vendedor) */
+.lb{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.lb li{display:grid;grid-template-columns:30px minmax(0,1fr) minmax(90px,40%);gap:12px;align-items:center;padding:9px 10px;border-radius:12px}
+.lb li.me{background:var(--tint)}
+.lb .ps{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:700;background:var(--track);color:var(--muted)}
+.lb li:nth-child(1) .ps{background:var(--deep);color:#fff}
+.lb li:nth-child(2) .ps,.lb li:nth-child(3) .ps{background:var(--pale);color:var(--deep)}
+.lb .nm{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb .me .nm{font-weight:700}
+.lb .tu{font-size:10px;font-weight:700;color:#fff;background:var(--accent);border-radius:999px;padding:2px 7px;margin-left:6px;vertical-align:2px}
+.lb .vv{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.lb .vv b{font-size:13.5px;font-variant-numeric:tabular-nums}
+.lb .bar{width:100%;height:6px;border-radius:99px;background:var(--track);overflow:hidden}
+.lb .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--deep),var(--accent))}
+.lb .bar i.done{background:var(--ok)}
+.lb-msg{margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--bg);font-size:13.5px;color:var(--text)}
+.lb-msg b{color:var(--deep)}
 
 /* HBAR LIST */
 .hb{display:flex;flex-direction:column;gap:12px}
@@ -482,16 +518,30 @@ function legend(segs, fmt = money) {
     <span class="num"><span class="val">${fmt(x.v)}</span><span class="pct">${(x.v / tot * 100).toFixed(0)}%</span></span></li>`).join('')}</ul>`;
 }
 function ring(pct, o = {}) {
-  const size = o.size || 150, st = o.stroke || 16, r = (size - st) / 2, C = 2 * Math.PI * r;
-  const p = Math.max(0, Math.min(1, pct)), dash = p * C, id = 'g' + Math.random().toString(36).slice(2, 8);
+  // Anillo tipo Apple Fitness: al pasar del 100% la vuelta completa se atenúa y la vuelta extra va encima con color intenso
+  // y la punta proyecta una sombra para que se note que la meta se sobrepasó.
+  const size = o.size || 150, st = o.stroke || 16, r = (size - st) / 2, C = 2 * Math.PI * r, c = size / 2;
+  const v = Math.max(0, pct || 0), first = Math.min(1, v), id = 'g' + Math.random().toString(36).slice(2, 8);
+  const vueltas = Math.floor(v), resto = v - vueltas, extra = v > 1 ? (resto > 0.001 ? resto : 1) : 0;
+  const rot = `transform="rotate(-90 ${c} ${c})"`;
+  let svg = `<defs>
+      <linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--deep)"/></linearGradient>
+      <linearGradient id="${id}b" x1="0" y1="1" x2="1" y2="0"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--deep)"/></linearGradient>
+      <linearGradient id="${id}c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--pale)"/><stop offset="1" style="stop-color:var(--soft)"/></linearGradient>
+      <filter id="${id}s" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="0" stdDeviation="${Math.max(1, st * 0.22)}" flood-color="#000" flood-opacity=".55"/></filter>
+    </defs>
+    <circle cx="${c}" cy="${c}" r="${r}" fill="none" style="stroke:var(--track)" stroke-width="${st}"/>`;
+  if (first > 0) svg += `<circle class="arc" cx="${c}" cy="${c}" r="${r}" fill="none" stroke="url(#${id}${extra > 0 ? 'c' : 'a'})" stroke-width="${st}" stroke-linecap="round" stroke-dasharray="${first * C} ${C}" ${rot}/>`;
+  if (extra > 0) {
+    const ang = (extra * 360 - 90) * Math.PI / 180, tx = c + r * Math.cos(ang), ty = c + r * Math.sin(ang);
+    svg += `<circle class="arc arc2" cx="${c}" cy="${c}" r="${r}" fill="none" stroke="url(#${id}b)" stroke-width="${st}" stroke-linecap="round" stroke-dasharray="${extra * C} ${C}" ${rot}/>
+      <circle class="tip" cx="${tx}" cy="${ty}" r="${st / 2}" style="fill:var(--deep)" filter="url(#${id}s)"/>`;
+  }
+  const txt = Math.round(v * 100) + '%';
+  const fs = size > 100 ? 26 : (txt.length >= 4 ? 10.5 : 12.5);
   return `<div class="donut" style="width:${size}px;height:${size}px">
-    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${Math.round(pct * 100)}%">
-      <defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--deep)"/></linearGradient></defs>
-      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" style="stroke:var(--track)" stroke-width="${st}"/>
-      ${p > 0 ? `<circle class="arc" cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="url(#${id})" stroke-width="${st}" stroke-linecap="round"
-        stroke-dasharray="${dash} ${C}" transform="rotate(-90 ${size/2} ${size/2})"/>` : ''}
-    </svg>
-    <div class="ctr"><b class="num" style="font-size:${size > 100 ? 26 : 13}px">${Math.round(pct * 100)}%</b>${size > 100 ? `<span>${o.sub || ''}</span>` : ''}</div></div>`;
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${txt}${vueltas >= 1 && v > 1 ? ' — meta superada' : ''}">${svg}</svg>
+    <div class="ctr"><b class="num" style="font-size:${fs}px">${txt}</b>${size > 100 ? `<span>${v > 1 ? (v >= 2 ? (Math.floor(v * 10) / 10) + '× la meta' : 'meta superada') : (o.sub || '')}</span>` : ''}</div></div>`;
 }
 const PAL = ['var(--p1)', 'var(--p2)', 'var(--p3)', 'var(--p4)', 'var(--p5)', 'var(--p6)', 'var(--p7)'];
 
@@ -667,6 +717,50 @@ function productosHTML(c) {
     </div></div>`;
 }
 
+/* ---------------- Ranking del equipo (sin montos) ---------------- */
+function posiciones(arr, key) {
+  const s = arr.filter(x => x[key] > 0).sort((a, b) => b[key] - a[key] || a.n.localeCompare(b.n, 'es'));
+  let last = null, pos = 0;
+  return s.map((x, i) => { if (x[key] !== last) { pos = i + 1; last = x[key]; } return Object.assign({}, x, { pos }); });
+}
+function rankingEquipo(vid) {
+  const D = S.data, p = S.period;
+  if (p.mode !== 'month') return `<div class="grid g1"><div class="card"><h3>Ranking del equipo</h3><p class="note" style="margin:0">El ranking es mensual. Elige “Mes” para verlo.</p></div></div>`;
+  const rows = (D.board || {})[p.ym] || [];
+  const acc = posiciones(rows, 'p'), dev = posiciones(rows, 'u');
+  const maxU = Math.max(1, ...dev.map(x => x.u));
+  const yo = x => x.id === vid;
+  const fila = (x, val, w, done) => `<li class="${yo(x) ? 'me' : ''}"><span class="ps">${x.pos}</span>
+      <span class="nm" title="${esc(x.n)}">${esc(x.n)}${yo(x) ? '<span class="tu">TÚ</span>' : ''}</span>
+      <span class="vv"><b>${val}</b><span class="bar"><i class="${done ? 'done' : ''}" style="width:${Math.max(3, Math.min(100, w))}%"></i></span></span></li>`;
+
+  // siguiente paso (solo con datos propios exactos)
+  const miAcc = corte(vid, f => f && f.startsWith(p.ym)).accSold;
+  const mA = acc.find(yo), mD = dev.find(yo);
+  let msgA, msgD;
+  if (!mA) msgA = 'Vende tu primer accesorio del mes para entrar al ranking.';
+  else if (mA.pos === 1) msgA = '<b>¡Vas en primer lugar!</b> Sigue así.';
+  else {
+    const sig = acc.filter(x => x.pos < mA.pos).pop();
+    const falta = Math.max(1, Math.ceil(sig.p / 100 * D.meta - miAcc + 1));
+    msgA = `Te faltan <b>≈${money(falta, 0)}</b> en accesorios para pasar al <b>#${sig.pos}</b>.`;
+  }
+  if (!mD) msgD = 'Vende tu primer equipo del mes para entrar al ranking.';
+  else if (mD.pos === 1) msgD = '<b>¡Vas en primer lugar!</b> Sigue así.';
+  else {
+    const sig = dev.filter(x => x.pos < mD.pos).pop(), n = sig.u - mD.u + 1;
+    msgD = `Te ${n === 1 ? 'falta' : 'faltan'} <b>${n} equipo${n === 1 ? '' : 's'}</b> para pasar al <b>#${sig.pos}</b>.`;
+  }
+  return `<div class="grid g2">
+    <div class="card"><h3>Ranking · Meta de accesorios · ${ymLabel(p.ym)}</h3>
+      ${acc.length ? `<ul class="lb">${acc.map(x => fila(x, Math.round(x.p) + '%' + (x.p >= 100 ? ' ✓' : ''), x.p, x.p >= 100)).join('')}</ul>` : '<div class="empty">Aún no hay ventas de accesorios este mes.</div>'}
+      <div class="lb-msg">${msgA}</div></div>
+    <div class="card"><h3>Ranking · Dispositivos vendidos · ${ymLabel(p.ym)}</h3>
+      ${dev.length ? `<ul class="lb">${dev.map(x => fila(x, x.u + ' equipo' + (x.u === 1 ? '' : 's'), x.u / maxU * 100, false)).join('')}</ul>` : '<div class="empty">Aún no hay dispositivos vendidos este mes.</div>'}
+      <div class="lb-msg">${msgD}</div></div>
+  </div>`;
+}
+
 /* ---------------- Vista Vendedor ---------------- */
 function vistaVendedor(vid) {
   const D = S.data, v = D.vmap[vid] || { name: vid }, pred = enPeriodo(S.period), c = corte(vid, pred);
@@ -699,6 +793,8 @@ function vistaVendedor(vid) {
 
     ${metaCard(vid)}
   </div>
+
+  ${rankingEquipo(vid)}
 
   <div class="grid g12">
     <div class="card cc"><h3>Comisión de accesorios</h3><div class="body">
@@ -734,7 +830,7 @@ function vistaTienda() {
   const rank = vendedores.map(v => {
     const k = corte(v.id, pred);
     return { v, k, pct: pm ? k.accSold / D.meta : null, proy: proyeccion(k.total) };
-  }).sort((a, b) => b.k.total - a.k.total);
+  }).filter(r => r.k.devN || r.k.accN).sort((a, b) => b.k.total - a.k.total);
 
   const tp = new Map(), tg = new Map();
   c.d.forEach(x => { tp.set(x.m, (tp.get(x.m) || 0) + x.p); tg.set(x.m, (tg.get(x.m) || 0) + (x.g || 0)); });
@@ -781,14 +877,14 @@ function vistaTienda() {
       <div class="rank">${rank.map((r, i) => {
         const [cls, txt] = r.pct == null ? ['neutral', 'Meta mensual'] : semaforo(r.pct);
         return `<div class="rk"><div class="pos">${i + 1}</div>
-          <div>${ring(r.pct || 0, { size: 50, stroke: 6 })}</div>
-          <div style="min-width:0"><div class="nm">${esc(r.v.name)}</div>
-            <div class="sm num">Disp. ${money0(r.k.devSold)} (${r.k.devN}) · Acc. ${money0(r.k.accSold)}</div>
-            <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><span class="pill ${cls}"><span class="sd"></span>${txt}</span>
-            ${r.pct != null && r.pct < 1 ? `<span class="pill neutral num">Faltan ${money0(D.meta - r.k.accSold)}</span>` : ''}</div></div>
-          <div class="tot"><b class="num">${money0(r.k.total)}</b><div class="sm num">Comisión ${money(r.k.com)}</div>${r.proy ? `<div class="sm num">Proy. ${money0(r.proy)}</div>` : ''}</div>
+          <div class="ring">${ring(r.pct || 0, { size: 50, stroke: 6 })}</div>
+          <div class="info"><div class="nm">${esc(r.v.name)}</div>
+            <div class="sm num"><span class="ln">Disp. ${money0(r.k.devSold)} · ${r.k.devN} u</span><span class="sep"> · </span><span class="ln">Acc. ${money0(r.k.accSold)} · ${r.k.accN} ped.</span></div></div>
+          <div class="pills"><span class="pill ${cls}"><span class="sd"></span>${txt}</span>
+            ${r.pct != null && r.pct < 1 ? `<span class="pill neutral num">Faltan ${money(D.meta - r.k.accSold, 0)}</span>` : ''}</div>
+          <div class="tot"><b class="num">${money0(r.k.total)}</b><span class="sm num">Comisión ${money(r.k.com)}</span>${r.proy ? `<span class="sm num">Proy. ${money0(r.proy)}</span>` : ''}</div>
           <div class="go"><button class="btn alt sm" data-ver="${esc(r.v.id)}">Ver</button></div></div>`;
-      }).join('') || '<div class="empty">No hay vendedores con cargo “Vendedor” en la hoja Comisiones.</div>'}</div></div>
+      }).join('') || '<div class="empty">Ningún vendedor tiene ventas en este período.</div>'}</div></div>
   </div>
 
   <div class="grid g21">
