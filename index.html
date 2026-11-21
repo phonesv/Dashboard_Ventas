@@ -20,7 +20,7 @@
   --line:#e5e5ea; --hover:#f2f2f4;
   --deep:#03686b; --accent:#01959f; --soft:#6cc3c8; --pale:#a9dcdf; --tint:#e4f4f5; --track:#e9eef0;
   --p1:#03686b; --p2:#01959f; --p3:#6cc3c8; --p4:#a9dcdf; --p5:#8e8e93; --p6:#c7c7cc; --p7:#dcdce0;
-  --res:#ff9500; --respale:#ffd199; --resbg:#fff1dc; --restx:#b25e00; --ok:#248a3d; --okbg:#e8f6ec; --warn:#a65b00; --warnbg:#fdf3e3; --bad:#c9001a; --badbg:#fdecee;
+  --acc:#e8590c; --acctint:#fde8dc; --res:#ff9500; --respale:#ffd199; --resbg:#fff1dc; --restx:#b25e00; --ok:#248a3d; --okbg:#e8f6ec; --warn:#a65b00; --warnbg:#fdf3e3; --bad:#c9001a; --badbg:#fdecee;
   --nav:rgba(245,245,247,.78); --shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.05);
   --r:22px;
 }
@@ -30,7 +30,7 @@
     --line:#2e2e31; --hover:#26262a;
     --deep:#2fb7bf; --accent:#52cdd4; --soft:#2a8f95; --pale:#1f6a6e; --tint:#0f3537; --track:#2a2a2d;
     --p1:#52cdd4; --p2:#2fb7bf; --p3:#1f8c92; --p4:#17676b; --p5:#8e8e93; --p6:#5a5a5f; --p7:#3a3a3d;
-    --res:#ff9f0a; --respale:#7a4d0a; --resbg:#3a2a0d; --restx:#ffb340; --ok:#4cd964; --okbg:#10301a; --warn:#ffb340; --warnbg:#3a2a0d; --bad:#ff6961; --badbg:#3a1416;
+    --acc:#ff7b3a; --acctint:#3d2215; --res:#ff9f0a; --respale:#7a4d0a; --resbg:#3a2a0d; --restx:#ffb340; --ok:#4cd964; --okbg:#10301a; --warn:#ffb340; --warnbg:#3a2a0d; --bad:#ff6961; --badbg:#3a1416;
     --nav:rgba(22,22,24,.72); --shadow:none;
   }
 }
@@ -140,6 +140,24 @@ h2{font-size:21px;letter-spacing:-.02em;margin:0;font-weight:600}
 .pill.ok{color:var(--ok);background:var(--okbg)} .pill.warn{color:var(--warn);background:var(--warnbg)} .pill.bad{color:var(--bad);background:var(--badbg)}
 .pill.neutral{color:var(--muted);background:var(--track)}
 .pill.res{color:#fff;background:var(--res)}
+.brk{width:100%;max-width:360px;margin-top:12px;text-align:left;font-size:14px}
+.kdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;vertical-align:1px}
+.brk-r{display:grid;gap:8px;align-items:baseline;padding:8px 0;font-variant-numeric:tabular-nums}
+.brk-r + .brk-r{border-top:1px solid var(--line)}
+.brk-r .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
+.brk-r .n{text-align:right;white-space:nowrap;color:var(--muted)}
+.brk-r .n.c{color:var(--text);font-weight:700}
+.brk-hd{font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:.03em;padding-top:0}
+.brk-hd span,.brk-hd .n,.brk-hd .n.c{color:var(--faint)}
+.brk-tot .l,.brk-tot .n{color:var(--text);font-weight:700}
+.brk-r.brk-tot{border-top:1.5px solid var(--text)}
+.sdet .brk{max-width:none;margin-top:0}
+.ftog{display:inline-flex;align-items:center;gap:8px}
+.ftog .n{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center}
+.ftog .chev2{width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin:-3px 0 0 2px;transition:transform .2s}
+.ftog.on .chev2{transform:rotate(-135deg);margin:3px 0 0 2px}
+.fpanel{padding:12px;border-radius:14px;background:var(--bg);margin:0 0 14px}
+.fpanel .filters{margin:0}
 .ibox{position:relative;display:inline-flex;vertical-align:middle;margin-left:6px}
 .ibtn{width:20px;height:20px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--muted);font:600 12px/18px Georgia,serif;font-style:italic;cursor:pointer;padding:0}
 .itx{display:none;position:absolute;left:0;top:26px;z-index:20;width:min(320px,78vw);padding:10px 12px;border-radius:12px;background:var(--card);box-shadow:0 6px 24px rgba(0,0,0,.18);border:1px solid var(--line);font-size:12.5px;font-weight:400;color:var(--muted);line-height:1.45;letter-spacing:0;text-transform:none}
@@ -169,6 +187,8 @@ details.rvd[open] .rvver{display:none}
   .rvr .c-id{grid-area:id}.rvr .c-tt{grid-area:tt}.rvr .c-ve{grid-area:ve;font-size:12.5px;color:var(--muted)}.rvr .c-es{grid-area:es}.rvr .c-fe{display:none}
   .rvr .id{word-break:normal;white-space:nowrap}
   .rvr .only-m{display:inline}
+  .fpanel .filters{grid-template-columns:1fr}
+  .fpanel{background:var(--track)}
   .mtabs .seg.full button{font-size:13px;padding:8px 2px}
 }
 .rsvl{font-size:12.5px;color:var(--restx);margin-top:6px;font-variant-numeric:tabular-nums}
@@ -298,7 +318,7 @@ details.rvd[open] .rvver{display:none}
 .pname{display:flex;align-items:center;gap:10px;min-width:0;font-weight:500}
 .pname .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tag{flex:0 0 auto;font-size:10.5px;font-weight:600;letter-spacing:.02em;padding:3px 8px;border-radius:999px;text-transform:uppercase}
-.tag.d{background:var(--tint);color:var(--deep)} .tag.a{background:var(--track);color:var(--muted)}
+.tag.d{background:var(--tint);color:var(--deep)} .tag.a{background:var(--acctint);color:var(--acc)}
 .chev{width:9px;height:9px;border-right:1.8px solid var(--faint);border-bottom:1.8px solid var(--faint);transform:rotate(45deg);justify-self:center;transition:transform .2s;margin-top:-4px}
 .pg.open .chev{transform:rotate(-135deg);margin-top:4px}
 .pdet{display:none;padding:4px 10px 14px}
@@ -580,12 +600,46 @@ function reservados(d, o, it) {
     resDevCom: sum(rd, 'c'), resAccCom: sum(ro, 'cc'), resCom: sum(rd, 'c') + sum(ro, 'cc'), resMeta: sum(ri, 't'),
     resGan: sum(rd, 'g') + sum(ro, 'g') };
 }
+// Desglose por categoría: TipoModelo (dispositivos) y LVL1 (accesorios)
+const TIPOS = { TELEFONO: 'Teléfonos', TABLET: 'Tablets', WATCH: 'Watch', LAPTOP: 'Laptops', AUDIFONO: 'Audífonos', PENCIL: 'Pencil', DESKTOP: 'Desktop' };
+const nomTipo = t => TIPOS[(t || '').toUpperCase()] || (t ? cap1(t.toLowerCase()) : 'Otros');
+function desglose(list, kf, qf, tk, ck) {
+  const m = new Map();
+  list.forEach(x => { const k = kf(x); const e = m.get(k) || { k, q: 0, qc: 0, t: 0, c: 0 }; e.q += qf(x); if ((x[ck] || 0) > 0.004) e.qc += qf(x); e.t += x[tk] || 0; e.c += x[ck] || 0; m.set(k, e); });
+  return [...m.values()].sort((a, b) => b.c - a.c || b.q - a.q || b.t - a.t);
+}
+// Tabla compacta: cols = [[encabezado, ancho]], filas = [celdas]; la última columna va en negrita
+function tablaHTML(cols, filas, total) {
+  const gt = `style="grid-template-columns:minmax(0,1fr) ${cols.slice(1).map(c => c[1]).join(' ')}"`;
+  const fila = (cells, cls) => `<div class="brk-r ${cls || ''}" ${gt}>${cells.map((v, i) => `<span class="${i === 0 ? 'l' : 'n' + (i === cells.length - 1 ? ' c' : '')}">${v}</span>`).join('')}</div>`;
+  return `<div class="brk">${fila(cols.map(c => c[0]), 'brk-hd')}${filas.map(f => fila(f)).join('')}${total ? fila(total, 'brk-tot') : ''}</div>`;
+}
+function desgloseHTML(tipo, c) {
+  const g = tipo === 'd' ? desglose(c.d, x => nomTipo(x.tm), () => 1, 'p', 'c') : desglose(c.it, x => x.l1 || 'Otros', x => x.q, 't', 'cc');
+  if (!g.length) return `<p class="note">Sin ${tipo === 'd' ? 'dispositivos' : 'accesorios'} en este período.</p>`;
+  const T = g.reduce((a, e) => ({ q: a.q + e.q, qc: a.qc + e.qc, c: a.c + e.c }), { q: 0, qc: 0, c: 0 });
+  if (tipo === 'd') return tablaHTML([['Tipo'], ['U', '44px'], ['Comisión', '90px']],
+    g.map(e => [esc(e.k), e.q, money(e.c)]), g.length > 1 ? ['Total', T.q, money(T.c)] : null);
+  // accesorios: solo lo que sí comisiona (unidades con comisión > 0)
+  const gc = g.filter(e => e.c > 0.004);
+  if (!gc.length) return `<p class="note">Todavía no hay accesorios que comisionen en este período.</p>`;
+  return tablaHTML([['Categoría'], ['U', '44px'], ['Comisión', '90px']],
+    gc.map(e => [esc(e.k), e.qc, money(e.c)]), gc.length > 1 ? ['Total', T.qc, money(T.c)] : null);
+}
+function vendidoHTML(c) {
+  const dot = v => `<i class="kdot" style="background:${v}"></i>`;
+  return tablaHTML([['Categoría'], ['U', '44px'], ['Vendido', '96px']],
+    [[dot('var(--deep)') + 'Dispositivos', c.devN, money(c.devSold)], [dot('var(--acc)') + 'Accesorios', c.accU, money(c.accSold)]],
+    ['Total', c.devN + c.accU, money(c.total)]);
+}
 const plural = (n, s, p) => n + ' ' + (n === 1 ? s : (p || s + 's'));
 // Línea naranja "incluye reservado" (vacía si no hay)
 function resLine(c, tipo, sty) {
   if (!c.resN) return '';
   const t = tipo === 'com'
     ? (c.resCom > 0.004 ? `Incluye ${money(c.resCom)} de ventas reservadas (se confirma al pasar a SOLD)` : '')
+    : tipo === 'comD' ? (c.resDevCom > 0.004 ? `Incluye ${money(c.resDevCom)} de ventas reservadas` : '')
+    : tipo === 'comAc' ? (c.resAccCom > 0.004 ? `Incluye ${money(c.resAccCom)} de ventas reservadas` : '')
     : tipo === 'comA' ? (c.resCom > 0.004 ? `Incluye ${money(c.resCom)} de comisión reservada · Disp. ${money(c.resDevCom)} · Acc. ${money(c.resAccCom)}` : '')
     : tipo === 'gan' ? (c.resGan ? `Incluye ${money0(c.resGan)} de ganancia de ventas reservadas` : '')
     : tipo === 'meta' ? (c.resMeta > 0 ? `Incluye ${money(c.resMeta)} reservado en la meta de accesorios` : '')
@@ -700,15 +754,15 @@ function bars(c) {
     g += `<g class="b" data-i="${i}">
       <rect x="${padL + i * step}" y="0" width="${step}" height="${H - padB}" fill="transparent"/>
       ${r.d > 0 ? `<rect x="${x}" y="${H - padB - hd}" width="${bw}" height="${hd}" rx="${r.a > 0 ? 0 : rad}" style="fill:var(--deep)"/>` : ''}
-      ${r.a > 0 ? `<rect x="${x}" y="${H - padB - hd - ha}" width="${bw}" height="${ha}" rx="${rad}" style="fill:var(--soft)"/>` : ''}
-      ${r.d > 0 && r.a > 0 ? `<rect x="${x}" y="${H - padB - hd - 1}" width="${bw}" height="${Math.min(rad + 1, ha + 1)}" style="fill:var(--soft)"/>` : ''}
+      ${r.a > 0 ? `<rect x="${x}" y="${H - padB - hd - ha}" width="${bw}" height="${ha}" rx="${rad}" style="fill:var(--acc)"/>` : ''}
+      ${r.d > 0 && r.a > 0 ? `<rect x="${x}" y="${H - padB - hd - 1}" width="${bw}" height="${Math.min(rad + 1, ha + 1)}" style="fill:var(--acc)"/>` : ''}
       ${r.d > 0 && r.a === 0 && hd > rad ? `<rect x="${x}" y="${H - padB - rad}" width="${bw}" height="${rad}" style="fill:var(--deep)"/>` : ''}
       <title>${lbl}: ${money(r.d + r.a)}</title></g>`;
     const show = byMonth || n <= 12 || (i + 1) % (sm ? 10 : 5) === 0 || i === 0;
     if (show) g += `<text x="${x + bw / 2}" y="${H - 5}" text-anchor="middle" font-size="11" style="fill:var(--faint)">${byMonth ? MESES[+r.k.slice(5) - 1].slice(0, 3) : +r.k.slice(8)}</text>`;
   });
   S._bars = rows; S._byMonth = byMonth;
-  return `<div class="key"><span><i style="background:var(--deep)"></i>Dispositivos</span><span><i style="background:var(--soft)"></i>Accesorios</span></div>
+  return `<div class="key"><span><i style="background:var(--deep)"></i>Dispositivos</span><span><i style="background:var(--acc)"></i>Accesorios</span></div>
     <div class="bars"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Ventas por ${byMonth ? 'mes' : 'día'}">${g}</svg></div>
     <div class="bars-cap" id="barsCap">Toca una barra para ver el detalle del ${byMonth ? 'mes' : 'día'}.</div>`;
 }
@@ -793,16 +847,21 @@ function filtrosHTML(c) {
   const sel = (id, todos, pref, cur, opts) => `<select class="select sm ${cur ? 'on' : ''}" id="${id}" aria-label="${todos}">
       <option value="">${todos}</option>${opts.map(([v, l]) => `<option value="${esc(v)}" ${v === cur ? 'selected' : ''}>${pref}${esc(l)}</option>`).join('')}</select>`;
   const f = S.f, activo = f.pos || f.pago || f.est || f.pc || f.vs || S.q, hayRes = f.vs || all.some(x => x.r);
-  return `<div class="filters no-print">
+  if (!S.fopen) return '';
+  return `<div class="fpanel no-print"><div class="filters">
     ${sel('fPos', 'Canal: todos', 'Canal: ', f.pos, vals(all, 'pos', f.pos).map(v => [v, v]))}
     ${sel('fPago', 'Pago: todos', 'Pago: ', f.pago, vals(all, 'pago', f.pago).map(v => [v, v]))}
     ${hayRes ? sel('fVs', 'Venta: todas', 'Venta: ', f.vs, [['sold', 'vendidas'], ['res', 'reservadas']]) : ''}
     ${S.tab !== 'acc' ? sel('fEst', 'Estado: todos', 'Estado: ', f.est, vals(c.d, 'est', f.est).map(v => [v, v])) : ''}
-    ${S.tab !== 'dev' ? sel('fPc', 'Comisión: todas', 'Comisión ', f.pc, [['DONE', 'pagada'], ['PEND', 'pendiente']]) : ''}
+    ${S.tab !== 'dev' && S.data.admin ? sel('fPc', 'Comisión: todas', 'Comisión ', f.pc, [['DONE', 'pagada'], ['PEND', 'pendiente']]) : ''}
     <select class="select sm" id="fSort" aria-label="Ordenar">${[['tot', 'Mayor venta'], ['qty', 'Mayor cantidad'], ['com', 'Mayor comisión'], ['name', 'Nombre A–Z']]
       .map(([v, l]) => `<option value="${v}" ${f.sort === v ? 'selected' : ''}>Orden: ${l}</option>`).join('')}</select>
     ${activo ? '<button class="btn-ghost" id="fClear">Limpiar filtros</button>' : ''}
-  </div>`;
+  </div></div>`;
+}
+function filtrosBtn() {
+  const f = S.f, n = ['pos', 'pago', 'est', 'pc', 'vs'].filter(k => f[k]).length + (f.sort !== 'tot' ? 1 : 0);
+  return `<button class="btn alt sm ftog ${S.fopen ? 'on' : ''}" id="fTog" aria-expanded="${!!S.fopen}">Filtros${n ? `<span class="n">${n}</span>` : ''}<span class="chev2"></span></button>`;
 }
 function cabeceraDet(t) {
   return t === 'd'
@@ -816,7 +875,7 @@ function detalleDev(x) {
     <div class="r num c-pr"><b>${money(x.p)}</b></div><div class="r s num c-co">${money(x.c)}</div></div>`;
 }
 function detalleAcc(x) {
-  const pag = x.cc > 0 ? (x.pc === 'DONE' ? '<div><span class="pill ok">Pagada</span></div>' : '<div><span class="pill warn">Pendiente</span></div>') : '';
+  const pag = S.data.admin && x.cc > 0 ? (x.pc === 'DONE' ? '<div><span class="pill ok">Pagada</span></div>' : '<div><span class="pill warn">Pendiente</span></div>') : '';
   return `<div class="dr${x.r ? ' rsv' : ''}"><div class="c-id"><div class="id">${esc(x.o)}${x.r ? '<span class="rtag">Reservado</span>' : ''}</div><div class="s only-m">${x.q} u</div></div>
     <div class="num c-fe">${fmtDate(x.f)}</div><div class="s hide-m">${x.q} u · ${esc([x.pos, x.pago].filter(Boolean).join(' · '))}</div>
     <div class="r num c-pr"><b>${money(x.t)}</b></div><div class="r s num c-co">${money(x.cc)}${pag}</div></div>`;
@@ -837,6 +896,7 @@ function productosHTML(c) {
       <div style="display:flex;gap:10px;flex-wrap:wrap" class="no-print">
         <div class="seg" id="tabSeg"><button data-t="all" class="${S.tab === 'all' ? 'on' : ''}">Todo</button><button data-t="dev" class="${S.tab === 'dev' ? 'on' : ''}">Dispositivos</button><button data-t="acc" class="${S.tab === 'acc' ? 'on' : ''}">Accesorios</button></div>
         <input class="search" id="q" placeholder="Buscar producto, IMEI o N° de pedido" value="${esc(S.q)}" autocomplete="off">
+        ${filtrosBtn()}
       </div></div>
     ${filtrosHTML(c)}
     <div class="plist"><div class="phead"><span>Producto</span><span>Cant.</span><span>Vendido</span><span>Comisión</span><span></span></div>
@@ -912,8 +972,7 @@ function vistaVendedor(vid) {
   const prev = S.period.mode === 'month' ? corte(vid, f => f && f.startsWith(prevYm(S.period.ym))) : null;
   const pl = S.period.mode === 'month' ? prevLabel() : '';
   const nombre = (v.name || '').split(' ')[0];
-  const mix = [{ l: 'Dispositivos', v: c.devSold, c: 'var(--deep)' }, { l: 'Accesorios', v: c.accSold, c: 'var(--soft)' }];
-  const pago = [{ l: 'Pagada', v: c.paid, c: 'var(--deep)' }, { l: 'Pendiente', v: c.pend, c: 'var(--p6)' }];
+  const mix = [{ l: 'Dispositivos', v: c.devSold, c: 'var(--deep)' }, { l: 'Accesorios', v: c.accSold, c: 'var(--acc)' }];
   if (esMovil()) return vendedorMovil(vid, v, c, prev, pl, nombre);
 
   return `
@@ -926,29 +985,32 @@ function vistaVendedor(vid) {
 
   <div class="grid g3">
     <div class="card cc"><h3>Vendido</h3><div class="body">
-      <div class="viz">${donut(mix, { size: 150, stroke: 16, center: money0(c.total), sub: 'total' })}${legend(mix)}</div>
+      ${donut(mix, { size: 150, stroke: 16, center: money0(c.total), sub: 'total' })}
       ${prev ? deltaHTML(c.total, prev.total, pl) : ''}
-      <div class="note">${c.devN} dispositivo${c.devN === 1 ? '' : 's'} · ${c.accU} accesorio${c.accU === 1 ? '' : 's'} en ${c.accN} pedido${c.accN === 1 ? '' : 's'}</div>
+      ${vendidoHTML(c)}
+      <div class="note">Accesorios en ${plural(c.accN, 'pedido')}</div>
       ${resLine(c)}
     </div></div>
 
-    <div class="card cc"><h3>Comisión total</h3><div class="body">
-      <div class="big num">${money(c.com)}</div>
-      ${prev ? deltaHTML(c.com, prev.com, pl) : ''}
-      ${kvs([['Dispositivos', money(c.devCom)], ['Accesorios', money(c.accCom)]])}
-      ${resLine(c, 'com')}
+    <div class="card cc"><h3>Dispositivos</h3><div class="body">
+      <div class="big num">${money(c.devCom)}</div><div class="muted" style="font-size:13px;margin-top:-2px">comisión</div>
+      ${prev ? deltaHTML(c.devCom, prev.devCom, pl) : ''}
+      ${desgloseHTML('d', c)}
+      ${resLine(c, 'comD')}
     </div></div>
 
-    ${metaCard(vid)}
+    <div class="card cc"><h3>Accesorios</h3><div class="body">
+      <div class="big num">${money(c.accCom)}</div><div class="muted" style="font-size:13px;margin-top:-2px">comisión</div>
+      ${prev ? deltaHTML(c.accCom, prev.accCom, pl) : ''}
+      ${desgloseHTML('a', c)}
+      ${resLine(c, 'comAc')}
+    </div></div>
   </div>
 
   ${rankingEquipo(vid)}
 
   <div class="grid g12">
-    <div class="card cc"><h3>Comisión de accesorios confirmada</h3><div class="body">
-      <div class="viz">${donut(pago, { size: 140, stroke: 15, center: money0(c.paid + c.pend), sub: 'accesorios' })}${legend(pago)}</div>
-      <div class="note">Solo comisión confirmada (SOLD), según Pago Comision.</div>
-    </div></div>
+    ${metaCard(vid)}
     <div class="card"><h3>Ventas por ${S.period.mode === 'range' && barsData(c).byMonth ? 'mes' : 'día'}</h3>${bars(c)}</div>
   </div>
 
@@ -1033,7 +1095,7 @@ function vistaTienda() {
   const pticket = prev && (prev.devN + prev.accN) ? prev.total / (prev.devN + prev.accN) : 0;
   const proy = proyeccion(c.total);
 
-  const mix = [{ l: 'Dispositivos', v: c.devSold, c: 'var(--deep)' }, { l: 'Accesorios', v: c.accSold, c: 'var(--soft)' }];
+  const mix = [{ l: 'Dispositivos', v: c.devSold, c: 'var(--deep)' }, { l: 'Accesorios', v: c.accSold, c: 'var(--acc)' }];
   const agrupar = (key) => { const m = {}; c.d.forEach(x => m[x[key] || 'Sin dato'] = (m[x[key] || 'Sin dato'] || 0) + x.p); c.o.forEach(x => m[x[key] || 'Sin dato'] = (m[x[key] || 'Sin dato'] || 0) + x.t);
     let arr = Object.entries(m).map(([l, v]) => ({ l, v })).sort((a, b) => b.v - a.v);
     if (arr.length > 6) { const rest = arr.slice(5).reduce((s, x) => s + x.v, 0); arr = arr.slice(0, 5).concat([{ l: 'Otros', v: rest }]); }
@@ -1154,11 +1216,11 @@ function vendedorMovil(vid, v, c, prev, pl, nombre) {
     }
     const items = [
       { k: 'vend', l: 'Vendido', v: money0(c.total), d: prev ? deltaMini(c.total, prev.total) : '',
-        det: kvs([['Dispositivos', money(c.devSold), c.devN + ' u'], ['Accesorios', money(c.accSold), c.accU + ' u · ' + c.accN + ' ped.']]) + resLine(c, '', 'text-align:center') + (prev ? `<div style="text-align:center">${deltaHTML(c.total, prev.total, pl)}</div>` : '') },
-      { k: 'com', l: 'Comisión total', v: money0(c.com), d: prev ? deltaMini(c.com, prev.com) : '',
-        det: kvs([['Dispositivos', money(c.devCom)], ['Accesorios', money(c.accCom)]]) + resLine(c, 'com', 'text-align:center') + (prev ? `<div style="text-align:center">${deltaHTML(c.com, prev.com, pl)}</div>` : '') },
-      { k: 'cob', l: 'Por cobrar', v: money0(c.pend), d: '<small class="flat">comisión acc.</small>',
-        det: kvs([['Comisión acc. pagada', money(c.paid)], ['Comisión acc. pendiente', money(c.pend)]]) + '<p class="note" style="text-align:center">Solo comisión de accesorios confirmada (SOLD), según Pago Comision. La comisión de dispositivos no tiene estado de pago.</p>' }
+        det: vendidoHTML(c) + resLine(c, '', 'text-align:center') + (prev ? `<div style="text-align:center">${deltaHTML(c.total, prev.total, pl)}</div>` : '') },
+      { k: 'com', l: 'Dispositivos', v: money0(c.devCom), d: prev ? deltaMini(c.devCom, prev.devCom) : '',
+        det: desgloseHTML('d', c) + resLine(c, 'comD', 'text-align:center') + (prev ? `<div style="text-align:center">${deltaHTML(c.devCom, prev.devCom, pl)}</div>` : '') },
+      { k: 'cacc', l: 'Accesorios', v: money0(c.accCom), d: prev ? deltaMini(c.accCom, prev.accCom) : '',
+        det: desgloseHTML('a', c) + resLine(c, 'comAc', 'text-align:center') + (prev ? `<div style="text-align:center">${deltaHTML(c.accCom, prev.accCom, pl)}</div>` : '') }
     ];
     cuerpo = `<div class="grid g1"><div class="card cc msum"><h3>Tu mes · ${periodoTexto()}</h3><div class="body">${metaHTML}</div>${statsHTML(items)}</div></div>`;
   } else if (tab === 'eq') {
@@ -1252,9 +1314,7 @@ function estadoHTML(vid) {
       <tr><td>Accesorios</td><td>${money(c.accCom)}</td></tr>
       <tr class="tot"><td>Total comisión</td><td>${money(c.com)}</td></tr>${c.resCom > 0.004 ? `<tr><td>Incluye reservado</td><td>${money(c.resCom)}</td></tr>` : ''}</table>
     <table class="pd-k"><tr><th colspan="2">Meta accesorios (${money(D.meta, 0)}/mes)</th></tr>
-      ${metaRows}
-      <tr><td>Com. acc. pagada (SOLD)</td><td>${money(c.paid)}</td></tr>
-      <tr class="tot"><td>Com. acc. pendiente (SOLD)</td><td>${money(c.pend)}</td></tr></table>
+      ${metaRows}</table>
   </div>
 
   <h2>Dispositivos vendidos (${devs.length}${c.resDN ? ' · ' + c.resDN + ' reservado' + (c.resDN === 1 ? '' : 's') : ''})</h2>
@@ -1266,10 +1326,10 @@ function estadoHTML(vid) {
     : '<div class="pd-empty">Sin dispositivos vendidos en este período.</div>'}
 
   <h2>Accesorios vendidos (${c.accU} u en ${c.accN} pedidos)</h2>
-  ${accs.length ? `<table class="pd-t"><thead><tr><th>Fecha</th><th>Pedido</th><th>Producto</th><th class="r">Cant.</th><th class="r">Total</th><th class="r">Comisión</th><th>Pago com.</th></tr></thead>
+  ${accs.length ? `<table class="pd-t"><thead><tr><th>Fecha</th><th>Pedido</th><th>Producto</th><th class="r">Cant.</th><th class="r">Total</th><th class="r">Comisión</th></tr></thead>
     <tbody>${accs.map(x => `<tr class="${x.r ? 'rsv' : ''}"><td class="m">${fmtDate(x.f)}</td><td class="m">${esc(x.o)}${x.r ? '<span class="pd-r">Reservado</span>' : ''}</td><td>${esc(x.n)}</td>
-      <td class="r">${x.q}</td><td class="r">${money(x.t)}</td><td class="r">${money(x.cc)}</td><td>${x.cc > 0 ? (x.pc === 'DONE' ? 'Pagada' : 'Pendiente') : '—'}</td></tr>`).join('')}</tbody>
-    <tfoot><tr><td colspan="3">Total accesorios</td><td class="r">${c.accU}</td><td class="r">${money(sum(accs, 't'))}</td><td class="r">${money(c.accCom)}</td><td></td></tr></tfoot></table>`
+      <td class="r">${x.q}</td><td class="r">${money(x.t)}</td><td class="r">${money(x.cc)}</td></tr>`).join('')}</tbody>
+    <tfoot><tr><td colspan="3">Total accesorios</td><td class="r">${c.accU}</td><td class="r">${money(sum(accs, 't'))}</td><td class="r">${money(c.accCom)}</td></tr></tfoot></table>`
     : '<div class="pd-empty">Sin accesorios vendidos en este período.</div>'}
 
   <p class="pd-note">Se cuentan ventas SOLD y RESERVED; las marcadas como Reservado aún no se confirman y su comisión es proyectada hasta que pasen a SOLD. Los dispositivos comisionan siempre. Los accesorios comisionan únicamente sobre lo vendido arriba de ${money(D.meta, 0)} en cada mes calendario: 5% en artículos Original y 10% en el resto; el artículo que cruza la meta comisiona solo la parte que la sobrepasa.
@@ -1409,6 +1469,7 @@ app.addEventListener('click', e => {
   if (row) { const g = row.parentElement, k = g.dataset.k; g.classList.toggle('open'); const o = g.classList.contains('open'); o ? S.open.add(k) : S.open.delete(k); row.setAttribute('aria-expanded', o); return; }
   const more = t.closest('[data-more]'); if (more) { S.limit = more.dataset.more === 'all' ? 1e9 : S.limit + 10; return render(); }
   const dmore = t.closest('[data-dmore]'); if (dmore) { const k = dmore.dataset.dmore; S.dlim[k] = (S.dlim[k] || 10) + 20; S.open.add(k); return render(); }
+  if (t.closest('#fTog')) { S.fopen = !S.fopen; return render(); }
   if (t.closest('#fClear')) { S.f = { ...FILTROS0, sort: S.f.sort }; S.q = ''; resetTabla(); return render(); }
   const ver = t.closest('[data-ver]'); if (ver) { S.view = 'vendor'; S.vid = ver.dataset.ver; S.open.clear(); resetTabla(); window.scrollTo(0, 0); return render(); }
   if (t.closest('#backStore')) { S.view = 'store'; window.scrollTo(0, 0); return render(); }
